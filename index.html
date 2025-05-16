@@ -30,6 +30,42 @@
     <body>
 
         <h1>Stocksy's Cloud Resume Challenge - AWS</h1>
+
+        <!-- Hit counter, written by Claude AI -->
+        document.addEventListener('DOMContentLoaded', () => {
+        try {
+            const counter = document.getElementById('hitCounter');
+            if (!counter) return; // Exit if element not found
+            
+            // Get the page path to use as a unique identifier
+            const pagePath = window.location.pathname;
+            
+            // Call the API Gateway endpoint to increment the counter - UPDATE THE URI BELOW WITH API ENDPOINT
+            fetch('https://ree9qtyrf3.execute-api.us-east-1.amazonaws.com/prod/incrementCounter', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ pagePath: pagePath })
+            })
+            .then(response => {
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+            return response.json();
+            })
+            .then(data => {
+            // Update the counter with the value from DynamoDB
+            counter.textContent = 'Hit Counter: ' + data.count;
+            })
+            .catch(error => {
+            console.error('Error updating hit counter:', error);
+            counter.textContent = 'Hit Counter: Error';
+            });
+        } catch (error) {
+            console.log('Hit counter error:', error);
+        }
+        });
         
         <h3>
             I'm completing The Cloud Resume Challenge!
@@ -46,39 +82,12 @@
         <div data-iframe-width="150" data-iframe-height="270" data-share-badge-id="461202f5-55de-41b4-a69a-4f54b4c07cf4" data-share-badge-host="https://www.credly.com"></div><script type="text/javascript" async src="https://cdn.credly.com/assets/utilities/embed.js"></script>
 
         <p>
-            A summary of my AWS certs are in <a href="https://www.credly.com/users/paul-stocks.d8dee574">Credly</a>.
+            All my AWS certs are listed in <a href="https://www.credly.com/users/paul-stocks.d8dee574">Credly</a>.
         </p>
 
 	<p>
             For further details, visit <a href="https://cloudresumechallenge.dev/docs/the-challenge/aws/">The Cloud Resume Challenge - AWS</a>.
         </p>
-
-    <div id="hitCounter">0</div>
-
-    <script>
-    document.addEventListener('DOMContentLoaded', () => {
-        try {
-        const counter = document.getElementById('hitCounter');
-        if (!counter) return; // Exit if element not found
-        
-        const key = 'pageHits_' + location.pathname;
-        let count = 0;
-        
-        try {
-            count = (parseInt(localStorage.getItem(key) || 0) + 1);
-            localStorage.setItem(key, count);
-        } catch (storageError) {
-            console.log('Storage error:', storageError);
-            // Continue with count=1 if localStorage fails
-            count = 1;
-        }
-        
-        counter.textContent = count;
-        } catch (error) {
-        console.log('Hit counter error:', error);
-        }
-    });
-    </script>
 
     </body>
 </html>
