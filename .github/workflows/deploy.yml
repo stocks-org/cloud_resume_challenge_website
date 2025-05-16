@@ -34,13 +34,15 @@ jobs:
       - name: S3 Sync
         uses: jakejarvis/s3-sync-action@v0.5.1
         with:
-          args: --acl public-read --follow-symlinks --delete
+          args: --follow-symlinks --delete
         env:
           AWS_S3_BUCKET: ${{ secrets.S3_BUCKET_NAME }}
           # These are now redundant as credentials are set in the previous step
           # but keeping them for compatibility with the action
           AWS_ACCESS_KEY_ID: ${{ secrets.ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.SECRET_ACCESS_KEY }}
+          AWS_REGION: 'us-east-1' # default region is us-east-1
+          SOURCE_DIR: 'dist'
 
       - name: CloudFront Invalidation
         uses: chetan/invalidate-cloudfront-action@master
