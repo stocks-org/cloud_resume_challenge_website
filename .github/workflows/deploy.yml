@@ -52,3 +52,7 @@ jobs:
           AWS_REGION: 'us-east-1'
           AWS_ACCESS_KEY_ID: ${{ secrets.ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.SECRET_ACCESS_KEY }}
+
+      - name: Sleep for 60 seconds to allow cache invalidation to complete
+        run: sleep 60s
+        shell: bash
