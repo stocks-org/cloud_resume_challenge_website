@@ -41,8 +41,8 @@ jobs:
           # but keeping them for compatibility with the action
           AWS_ACCESS_KEY_ID: ${{ secrets.ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.SECRET_ACCESS_KEY }}
-          AWS_REGION: 'us-east-1' # default region is us-east-1
-          SOURCE_DIR: 'dist'
+          AWS_REGION: 'us-east-1'    # optional: defaults to us-east-1
+          SOURCE_DIR: ''    # optional: defaults to entire repository
 
       - name: CloudFront Invalidation
         uses: chetan/invalidate-cloudfront-action@master
