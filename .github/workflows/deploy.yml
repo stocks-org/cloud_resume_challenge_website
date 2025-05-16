@@ -1,0 +1,65 @@
+name: Deploy to S3 and Invalidate CloudFront
+
+on:
+  push:
+    branches: 
+      - 'main'
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    # Add permissions needed for private repository
+    permissions:
+      contents: read
+      id-token: write
+      
+    steps:
+      # Checkout code with authentication for private repo
+      - name: Checkout code
+        uses: actions/checkout@v3
+        with:
+          # Use the built-in GITHUB_TOKEN for authentication
+          token: ${{ secrets.GITHUB_TOKEN }}
+          # If you need to checkout submodules in private repos
+          submodules: 'recursive'
+      
+      # Optional: Setup Node.js if you're building a JS/TS project
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '16'
+          cache: 'npm' # or yarn, pnpm, etc.
+      
+      # Build steps would typically go here
+      - name: Install dependencies
+        run: npm ci
+      - name: Build
+        run: npm run build
+
+      # Configure AWS credentials for private repo access
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v2
+        with:
+          aws-access-key-id: ${{ secrets.ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.SECRET_ACCESS_KEY }}
+          aws-region: us-east-1
+
+      - name: S3 Sync
+        uses: jakejarvis/s3-sync-action@v0.5.1
+        with:
+          args: --acl public-read --follow-symlinks --delete
+        env:
+          AWS_S3_BUCKET: ${{ secrets.S3_BUCKET_NAME }}
+          # These are now redundant as credentials are set in the previous step
+          # but keeping them for compatibility with the action
+          AWS_ACCESS_KEY_ID: ${{ secrets.ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.SECRET_ACCESS_KEY }}
+
+      - name: CloudFront Invalidation
+        uses: chetan/invalidate-cloudfront-action@master
+        env:
+          DISTRIBUTION: ${{ secrets.AWS_DISTRIBUTION }}
+          PATHS: '/*'
+          AWS_REGION: 'us-east-1'
+          AWS_ACCESS_KEY_ID: ${{ secrets.ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.SECRET_ACCESS_KEY }}
