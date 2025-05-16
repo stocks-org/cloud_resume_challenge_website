@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html>
-    
     <head>
         <title>Stocksy's Cloud Resume Challenge - AWS</title>
 
@@ -26,7 +25,6 @@
                 font-size: 20px;
             }
         </style>
-
     </head>
     
     <body>
@@ -55,6 +53,32 @@
             For further details, visit <a href="https://cloudresumechallenge.dev/docs/the-challenge/aws/">The Cloud Resume Challenge - AWS</a>.
         </p>
 
-    </body>
+    <div id="hitCounter">0</div>
 
+    <script>
+    document.addEventListener('DOMContentLoaded', () => {
+        try {
+        const counter = document.getElementById('hitCounter');
+        if (!counter) return; // Exit if element not found
+        
+        const key = 'pageHits_' + location.pathname;
+        let count = 0;
+        
+        try {
+            count = (parseInt(localStorage.getItem(key) || 0) + 1);
+            localStorage.setItem(key, count);
+        } catch (storageError) {
+            console.log('Storage error:', storageError);
+            // Continue with count=1 if localStorage fails
+            count = 1;
+        }
+        
+        counter.textContent = count;
+        } catch (error) {
+        console.log('Hit counter error:', error);
+        }
+    });
+    </script>
+
+    </body>
 </html>
