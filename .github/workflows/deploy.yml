@@ -22,19 +22,6 @@ jobs:
           token: ${{ secrets.GITHUB_TOKEN }}
           # If you need to checkout submodules in private repos
           submodules: 'recursive'
-      
-      # Optional: Setup Node.js if you're building a JS/TS project
-      - name: Setup Node.js
-        uses: actions/setup-node@v3
-        with:
-          node-version: '16'
-          cache: 'npm' # or yarn, pnpm, etc.
-      
-      # Build steps would typically go here
-      - name: Install dependencies
-        run: npm ci
-      - name: Build
-        run: npm run build
 
       # Configure AWS credentials for private repo access
       - name: Configure AWS credentials
