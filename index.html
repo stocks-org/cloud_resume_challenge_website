@@ -32,40 +32,44 @@
         <h1>Stocksy's Cloud Resume Challenge - AWS</h1>
 
         <!-- Hit counter, written by Claude AI -->
-        document.addEventListener('DOMContentLoaded', () => {
-        try {
-            const counter = document.getElementById('hitCounter');
-            if (!counter) return; // Exit if element not found
-            
-            // Get the page path to use as a unique identifier
-            const pagePath = window.location.pathname;
-            
-            // Call the API Gateway endpoint to increment the counter - UPDATE THE URI BELOW WITH API ENDPOINT
-            fetch('https://ree9qtyrf3.execute-api.us-east-1.amazonaws.com/prod/incrementCounter', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({ pagePath: pagePath })
-            })
-            .then(response => {
-            if (!response.ok) {
-                throw new Error('Network response was not ok');
-            }
-            return response.json();
-            })
-            .then(data => {
-            // Update the counter with the value from DynamoDB
-            counter.textContent = 'Hit Counter: ' + data.count;
-            })
-            .catch(error => {
-            console.error('Error updating hit counter:', error);
-            counter.textContent = 'Hit Counter: Error';
+        <div id="hitCounter">Hit Counter: Loading...</div>
+        
+        <script>
+            document.addEventListener('DOMContentLoaded', () => {
+                try {
+                    const counter = document.getElementById('hitCounter');
+                    if (!counter) return; // Exit if element not found
+                    
+                    // Get the page path to use as a unique identifier
+                    const pagePath = window.location.pathname;
+                    
+                    // Call the API Gateway endpoint to increment the counter
+                    fetch('https://YOUR_API_GATEWAY_ID.execute-api.YOUR_REGION.amazonaws.com/prod/incrementCounter', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({ pagePath: pagePath })
+                    })
+                    .then(response => {
+                        if (!response.ok) {
+                            throw new Error('Network response was not ok');
+                        }
+                        return response.json();
+                    })
+                    .then(data => {
+                        // Update the counter with the value from DynamoDB
+                        counter.textContent = 'Hit Counter: ' + data.count;
+                    })
+                    .catch(error => {
+                        console.error('Error updating hit counter:', error);
+                        counter.textContent = 'Hit Counter: Error';
+                    });
+                } catch (error) {
+                    console.log('Hit counter error:', error);
+                }
             });
-        } catch (error) {
-            console.log('Hit counter error:', error);
-        }
-        });
+        </script>
         
         <h3>
             I'm completing The Cloud Resume Challenge!
