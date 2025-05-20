@@ -2,8 +2,9 @@ name: Deploy to S3 and Invalidate CloudFront
 
 on:
   push:
-    branches: 
-      - 'main'
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
 
 jobs:
   deploy:
@@ -12,7 +13,7 @@ jobs:
     permissions:
       contents: read
       id-token: write
-      
+
     steps:
       # Checkout code with authentication for private repo
       - name: Checkout code
@@ -22,6 +23,9 @@ jobs:
           token: ${{ secrets.GITHUB_TOKEN }}
           # If you need to checkout submodules in private repos
           submodules: 'recursive'
+      - name: Replace API endpoint placeholder in HTML file
+        run: |
+          sed -i "s|%%API_ENDPOINT%%|${{ secrets.API_ENDPOINT }}|g" ./index.html
 
       # Configure AWS credentials for private repo access
       - name: Configure AWS credentials
@@ -53,6 +57,6 @@ jobs:
           AWS_ACCESS_KEY_ID: ${{ secrets.ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.SECRET_ACCESS_KEY }}
 
-      - name: Sleep for 60 seconds to allow cache invalidation to complete
-        run: sleep 60s
+      - name: Sleep 30 seconds to allow cache invalidation to complete
+        run: sleep 30s
         shell: bash

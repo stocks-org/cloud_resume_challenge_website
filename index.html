@@ -75,9 +75,12 @@
                     
                     // Get the page path to use as a unique identifier
                     const pagePath = window.location.pathname;
-                    
+
+                    // API_ENDPOINT env var will be replaced during build time
+                    const apiEndpoint = '%%API_ENDPOINT%%/incrementCounter';
+
                     // Call the API Gateway endpoint to increment the counter
-                    fetch('https://ulgzt2w7we.execute-api.us-east-1.amazonaws.com/prod/incrementCounter', {
+                    fetch(apiEndpoint, {
                         method: 'POST',
                         headers: {
                             'Content-Type': 'application/json',
@@ -91,7 +94,7 @@
                         return response.json();
                     })
                     .then(data => {
-                        // Update the counter with the value from DynamoDB
+                        // Update the counter with the value from the DB
                         counter.textContent = 'Hit Counter: ' + data.count;
                     })
                     .catch(error => {
