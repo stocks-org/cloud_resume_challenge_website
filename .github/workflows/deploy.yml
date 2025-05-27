@@ -23,7 +23,7 @@ jobs:
           submodules: 'recursive'
       - name: Replace API endpoint placeholder in HTML file
         run: |
-          sed -i "s|%%API_ENDPOINT%%|${{ secrets.API_ENDPOINT }}|g" ./*.html
+          find . -name "*.html" -type f -exec sed -i "s|%%API_ENDPOINT%%|${{ secrets.API_ENDPOINT }}|g" {} +
 
       # Configure AWS credentials for private repo access
       - name: Configure AWS credentials
@@ -58,3 +58,6 @@ jobs:
       - name: Wait 30 seconds to allow cache invalidation to complete
         run: sleep 30s
         shell: bash
+
+      # Old commmands below:
+          # sed -i "s|%%API_ENDPOINT%%|${{ secrets.API_ENDPOINT }}|g" ./*.html
