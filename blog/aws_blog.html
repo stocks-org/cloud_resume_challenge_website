@@ -42,14 +42,14 @@
     <body>
 
         <h1>
-            Stocksy's AWS Challenge Blog
+            Stocksy's AWS Cloud Resume Challenge Blog
         </h1>
 
         <h3>
-            Cloud Resume Challenge - Requirements:
+            Requirements
         </h3>
 
-        </p>
+        <p>
             As per the requirements given in <a href="https://cloudresumechallenge.dev/docs/the-challenge/aws/" target="_blank">The Cloud Resume Challenge - AWS</a>, the website was built with several architecture principles in mind, based on my interpretation of the design spec.
             I used the MOSCOW technique (MUST, SHOULD, COULD, WONT) as described in the points below. Although all requirements might be judged initially as MUSTs, I considered the <a href="https://aws.amazon.com/architecture/well-architected/?wa-lens-whitepapers.sort-by=item.additionalFields.sortDate&wa-lens-whitepapers.sort-order=desc&wa-guidance-whitepapers.sort-by=item.additionalFields.sortDate&wa-guidance-whitepapers.sort-order=desc" target="_blank">Six Pillars of the AWS Well-Architected Framework</a> and where appropriate used tooling which in my experience can make some implementation improvements over the original design spec.
 
@@ -70,7 +70,7 @@
         </p>
 
         <h3>
-            Cloud Resume Challenge - Architecture Diagram:
+            Architecture
         </h3>
 
         <p>
@@ -84,7 +84,7 @@
         </p>
 
         <h3>
-            Cloud Resume Challenge - Future Improvements and Final Thoughts:
+            Future Improvements
         </h3>
 
         <p>
@@ -92,8 +92,12 @@
             AWS highly recommend implementing IAM Roles to issue STS (Security Token Service) calls such as <i>sts:AssumeRole</i> and <i>sts:AssumeRoleWithWebIdenity</i>. These provide short-lived access credentials based on an Access Key ID, a Secret Access Key and a Security Token. The timebound nature of these access tokens makes them by definition more secure than long-lived creds. This is a future enhacement I would like to make to the site.
         </p>
 
+        <h3>
+            Final Thoughts
+        </h3>
+
         <p>
-            Finally, you might be thinking "This is just a static website: you could have just hosted it in S3." Yes, I <i>could</i> however some considerations:
+            Finally, you might be thinking "This is just a static website: you could have just hosted it in S3!" Yes, I <i>could</i>, however some considerations:
 
             <ul>
                 <li>AWS now recommend using <a href="https://aws.amazon.com/amplify/faqs/?trk=bde46bbc-b618-48e1-b86a-1dd4c35b930f&sc_channel=ps&ef_id=EAIaIQobChMIyuLR26TLjQMV15VQBh3RlxEGEAAYASABEgJ19vD_BwE:G:s&s_kwcid=AL!4422!3!647301968149!e!!g!!aws%20amplify!19621293721!146139123512&gad_campaignid=19621293721&gbraid=0AAAAADjHtp-McekRy0of67TMEVkfAd3-w&gclid=EAIaIQobChMIyuLR26TLjQMV15VQBh3RlxEGEAAYASABEgJ19vD_BwE" target="_blank">Amplify</a> over S3 Static Web Hosting.</li>
