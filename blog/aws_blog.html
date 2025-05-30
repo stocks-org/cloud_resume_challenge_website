@@ -46,7 +46,31 @@
         </h1>
 
         <h3>
-            Architecture Diagram:
+            Cloud Resume Challenge - Requirements:
+        </h3>
+
+        </p>
+            As per the requirements given in <a href="https://cloudresumechallenge.dev/docs/the-challenge/aws/" target="_blank">The Cloud Resume Challenge - AWS</a>, the website was built with several architecture principles in mind, based on my interpretation of the design spec.
+            I used the MOSCOW technique (MUST, SHOULD, COULD, WONT) as described in the points below. Although all requirements might be judged initially as MUSTs, I considered the <a href="https://aws.amazon.com/architecture/well-architected/?wa-lens-whitepapers.sort-by=item.additionalFields.sortDate&wa-lens-whitepapers.sort-order=desc&wa-guidance-whitepapers.sort-by=item.additionalFields.sortDate&wa-guidance-whitepapers.sort-order=desc" target="_blank">Six Pillars of the AWS Well-Architected Framework</a> and where appropriate used tooling which in my experience can make some implementation improvements over the original design spec.
+
+            <ol type="1">
+                <li>MUST implement Security best practices: I've used principle of least privilege for all IAM users and policies. Data is encrypted in transit (HTTPS with TLSv1.3) and data is encrypted at rest (table objectd using DynamoDB-owned KMS key, bucket objects using SSE-S3). I've added a bucket policy which only allows the CloudFront Distribution and applied Origin Access Control to help guard against S3 bucket (origin) access.</li>
+                <li>MUST utilise Cost Optimization and Performance Efficiency: I've used a Serverless architecture: on-demand DynamoDB table (a pay-per-use payment model), an API Gateway fronting a Lambda function for the hit counter instead of running EC2 instances or a Container platform.</li>
+                <li>MUST apply Operational Excellence: Use automation/event-driven architectures: I've made both the website's backend and frontend deployable through GitHub Actions upon git push to the Main branch. Monitoring of failed GitHub pipelines and CloudWatch monitoring is included out-of-the-box for most AWS services, firther enhancing operational responsiveness.</li>
+                <li>MUST perform Reliably: By using AWS-managed services such as CloudFront, S3, DynamoDB these services are highly available within a single region, providing more than enough reliability for my use case.</li>
+                <li>MUST consider Sustainability: Again, using Serverless architecture ensures workloads are not running for longer than necessary and using CDK/CloudFormation templates ensures that infrastructure can be disposed quickly when no longer required.</li>
+                <li>SHOULD use CI/CD, HTML, CSS and a JavaScript website hit counter on the frontend: I followed this and hand-crafted much of the HTML but could not write a JavaScript hitcounter function. Here, I leveraged <a href=https://claude.ai/" target="_blank">Claude AI</a> to assist me with a JavaScript function which interfaces with a REST API Gateway endpoint. This in turn invokes a Python 3.9 Lambda to increment the hit count and persist the count State in DynamoDB. More on the backend components below.</li>
+                <li>SHOULD use CI/CD, an API, Python (with Tests), a Database for the backend and store all code in source control: Again I followed this and made sure to make the repo stored in GitHub but also utilise GitHub Actions, enabling the backend components to be automated using a CDK deploy within the Actions workflow which creates/updates a CloudFormation Stack. The CDK templates was written in TypeScript, again ably assisted by Claude AI.</li>
+                <li>COULD use SAM (Serverless Application Model) templates to define the backend infrrastrucure and store all code in source control: Here I deviated from the design spec by opting to use CDK (Cloud Development Kit), a well-supported framework for defining infrastructure-as-code in a number of languages. I opted for TypeScript due to its support by AWS and usage within business environments, allowing me to cross-train on in-demand services. I covered the CI/CD requirements to the letter by implementing GitHub Actions workflows for both the frontend (website) and backend (infrastrecture) repos and set the workflows to run upon a git push to the Main branch of each repo.</li>
+                <li>COULD write a Blog post about my experience. And I did!</li>
+            </ol>
+
+            Please view the Architecture diagram below and hopefully when paired with the Requirement sections it all makes sense.
+
+        </p>
+
+        <h3>
+            Cloud Resume Challenge - Architecture Diagram:
         </h3>
 
         <p>
@@ -57,6 +81,29 @@
                 height="1000"
                 title="Website Architecture PDF"
                 />
+        </p>
+
+        <h3>
+            Cloud Resume Challenge - Future Improvements and Final Thoughts:
+        </h3>
+
+        <p>
+            While Security best practices have been followed reasonably well, but the implemenation of this website is not free of issues. <u>Encrypted secrets</u> used by GitHub Actions are placed into environment variables, working in concert with least-privileged AWS users to perform tasks such as updating the CloudFormation Stack, Website file PUT requests into S3 buckets and invalidating the CloudFront Distribution cache. These are long-lived credentials (access keys) which although encrypted, does not follow security best practices and most companies have moved away from using them.
+            AWS highly recommend implementing IAM Roles to issue STS (Security Token Service) calls such as <i>sts:AssumeRole</i> and <i>sts:AssumeRoleWithWebIdenity</i>. These provide short-lived access credentials based on an Access Key ID, a Secret Access Key and a Security Token. The timebound nature of these access tokens makes them by definition more secure than long-lived creds. This is a future enhacement I would like to make to the site.
+        </p>
+
+        <p>
+            Finally, you might be thinking "This is just a static website: you could have just hosted it in S3." Yes, I <i>could</i> however some considerations:
+
+            <ul>
+                <li>AWS now recommend using <a href="https://aws.amazon.com/amplify/faqs/?trk=bde46bbc-b618-48e1-b86a-1dd4c35b930f&sc_channel=ps&ef_id=EAIaIQobChMIyuLR26TLjQMV15VQBh3RlxEGEAAYASABEgJ19vD_BwE:G:s&s_kwcid=AL!4422!3!647301968149!e!!g!!aws%20amplify!19621293721!146139123512&gad_campaignid=19621293721&gbraid=0AAAAADjHtp-McekRy0of67TMEVkfAd3-w&gclid=EAIaIQobChMIyuLR26TLjQMV15VQBh3RlxEGEAAYASABEgJ19vD_BwE" target="_blank">Amplify</a> over S3 Static Web Hosting.</li>
+                <li>I added HTTPS by using a Route 53 hosted zone include a ACM certificate signed and issued by the Amazon CA. This is a much more secure than a plain HTTP site hosted out of a bucket.</li>
+                <li>The inclusion of a CloudFront Distribution means the site takes advantage of Edge-optimised goodness and regional edge caches, making stockscloud.co.uk globally available wherever the userbase are located, with decreased latency/jitter over accessing via the S3 Origin. As mentioned in the requirements, <b>only</b> the Distribution can access the S3 origin, further strengthening the security posture of the site.</li>
+            </ul>
+        </p>
+
+        <p>
+            Thanks for reading!
         </p>
 
         <p>
