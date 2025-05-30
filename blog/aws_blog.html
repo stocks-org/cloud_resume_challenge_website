@@ -31,6 +31,10 @@
                 font-family: Verdana, Geneva, Tahoma, sans-serif;
                 font-size: 20px;
             }
+            ol {
+                font-family: Verdana, Geneva, Tahoma, sans-serif;
+                font-size: 16px;
+            }
             ul {
                 font-family: Verdana, Geneva, Tahoma, sans-serif;
                 font-size: 16px;
@@ -50,8 +54,8 @@
         </h3>
 
         <p>
-            Per the requirements given in <a href="https://cloudresumechallenge.dev/docs/the-challenge/aws/" target="_blank">The Cloud Resume Challenge - AWS</a>, the website was built with several architecture principles in mind, based on my interpretation of the design spec.
-            I used the MOSCOW method (MUST, SHOULD, COULD, WONT) - as described below. Although all requirements might be judged initially as MUST, I considered the <a href="https://aws.amazon.com/architecture/well-architected/?wa-lens-whitepapers.sort-by=item.additionalFields.sortDate&wa-lens-whitepapers.sort-order=desc&wa-guidance-whitepapers.sort-by=item.additionalFields.sortDate&wa-guidance-whitepapers.sort-order=desc" target="_blank">Six Pillars of the AWS Well-Architected Framework</a> and where appropriate used tooling which in my experience can make some implementation improvements over the original design spec.
+            Per the requirements given in <a href="https://cloudresumechallenge.dev/docs/the-challenge/aws/" target="_blank">The Cloud Resume Challenge - AWS</a>, the stockscloud.co.uk website was built with several architecture principles in mind based on my interpretation of the design spec while considering the <a href="https://aws.amazon.com/architecture/well-architected/?wa-lens-whitepapers.sort-by=item.additionalFields.sortDate&wa-lens-whitepapers.sort-order=desc&wa-guidance-whitepapers.sort-by=item.additionalFields.sortDate&wa-guidance-whitepapers.sort-order=desc" target="_blank">Six Pillars of the AWS Well-Architected Framework</a>.
+            I used the MOSCOW method (MUST, SHOULD, COULD, WONT) as described below. Although all requirements might be judged initially to be MUST, where appropriate I used tooling which allows for some improvements versus the original design spec.
 
             <ol type="1">
                 <li>MUST implement Security best practices: I've used principle of least privilege for all IAM users and policies. Data is encrypted in transit (HTTPS with TLSv1.3) and data is encrypted at rest (table objects using DynamoDB-owned KMS key, bucket objects using SSE-S3). I've added a bucket policy which only allows the CloudFront Distribution to access the S3 origin via CloudFront Origin Access Control.</li>
