@@ -86,8 +86,8 @@
         </h3>
 
         <p>
-            While Security best practices have been followed reasonably well, the implemenation of this website is not free of issues. <u>Encrypted secrets</u> used by GitHub Actions are placed into environment variables, working in concert with least-privileged AWS users to perform tasks such as updating the CloudFormation Stack, Website file PUT requests into S3 buckets and invalidating the CloudFront Distribution cache. These are long-lived credentials (access keys) which although encrypted, does not follow security best practices and most companies have moved away from using them.
-            AWS highly recommend implementing IAM Roles to issue STS (Security Token Service) calls such as <i>sts:AssumeRole</i> and <i>sts:AssumeRoleWithWebIdenity</i>. These provide short-lived access credentials based on an Access Key ID, a Secret Access Key and a Security Token. The timebound nature of these access tokens makes them by definition more secure than long-lived creds. This is a future enhacement I would like to make to the site.
+            While Security best practices have been followed reasonably well, the implementation of this website is not free of issues. <u>Encrypted secrets</u> used by GitHub Actions are placed into environment variables, working in concert with least-privileged AWS users/policies to perform tasks such as updating the CloudFormation Stack, Website file PUT requests to S3 and CloudFront cache invalidation. These use long-lived credentials (access keys) which although encrypted does not apply latest security best practices and for this reason most companies have moved away from using them.
+            AWS highly recommend implementing IAM Roles to issue STS (Security Token Service) calls such as <i>sts:AssumeRole</i> and <i>sts:AssumeRoleWithWebIdentity</i>. This provides temporary access credentials by issuing an Access Key ID, a Secret Access Key and a Security Token. The timebound nature of access tokens makes them by definition more secure than using long-lived credentials. I aim to make using Roles and integrating them into GitHib Actions the main future enhancement for the site.
         </p>
 
         <h3>
@@ -95,11 +95,11 @@
         </h3>
 
         <p>
-            You might be thinking "It's a static website; you could have just hosted it in S3!" Yes I <i>could</i>, however here is some justification for my approach:
+            You might be thinking "It's a static website; you could have just hosted it in S3!" Yes I <i>could</i>, however here is justification for taking my approach:
 
             <ul>
-                <li>Principally, I would have failed to meet the design spec of the Cloud Resume Challenge - A great reasonin itself to steer away from the simplest possible hosting solution.</li>
-                <li>In the S3 bucket properties, AWS recommend using <a href="https://aws.amazon.com/amplify/faqs/?trk=bde46bbc-b618-48e1-b86a-1dd4c35b930f&sc_channel=ps&ef_id=EAIaIQobChMIyuLR26TLjQMV15VQBh3RlxEGEAAYASABEgJ19vD_BwE:G:s&s_kwcid=AL!4422!3!647301968149!e!!g!!aws%20amplify!19621293721!146139123512&gad_campaignid=19621293721&gbraid=0AAAAADjHtp-McekRy0of67TMEVkfAd3-w&gclid=EAIaIQobChMIyuLR26TLjQMV15VQBh3RlxEGEAAYASABEgJ19vD_BwE" target="_blank">Amplify</a> over S3 Static Web Hosting.</li>
+                <li>Principally, I would have failed to meet the design spec of the Cloud Resume Challenge - A great reason to steer away from the simplest possible hosting solution being the "best".</li>
+                <li>In the S3 bucket properties, AWS recommend using <a href="https://aws.amazon.com/amplify/faqs/?trk=bde46bbc-b618-48e1-b86a-1dd4c35b930f&sc_channel=ps&ef_id=EAIaIQobChMIyuLR26TLjQMV15VQBh3RlxEGEAAYASABEgJ19vD_BwE:G:s&s_kwcid=AL!4422!3!647301968149!e!!g!!aws%20amplify!19621293721!146139123512&gad_campaignid=19621293721&gbraid=0AAAAADjHtp-McekRy0of67TMEVkfAd3-w&gclid=EAIaIQobChMIyuLR26TLjQMV15VQBh3RlxEGEAAYASABEgJ19vD_BwE" target="_blank">Amplify</a> over S3 Web Hosting.</li>
                 <li>I added HTTPS by using a Route 53 hosted zone including an ACM certificate issued by Amazon's CA. This is more secure than a plain HTTP site hosted from an S3 bucket.</li>
                 <li>The inclusion of a CloudFront Distribution means the site takes advantage of edge-optimisation and regional edge caches for serving the site and its assets. This makes stockscloud.co.uk available to a global userbase with decreased latency/jitter over accessing the site using S3. As mentioned in the requirements, <b>only</b> the Distribution can access the S3 origin, further strengthening the security posture of the site.</li>
             </ul>
