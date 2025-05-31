@@ -11,14 +11,14 @@
                 font-family: Verdana, Geneva, Tahoma, sans-serif;
             }
             body {
-                background-color: rgb(134, 160, 158);
+                background-color: white;
             }
             h1 {
                 color: black;
                 text-align: center;
             }
             h3 {
-                color: white;
+                color: black;
                 text-align: left;
                 font-family: Verdana, Geneva, Tahoma, sans-serif;
             }
@@ -90,8 +90,8 @@
         </h3>
 
         <p>
-            While good Security practices have been followed, the implementation of this website includes some IAM issues which can be addressed. Encrypted secrets used by GitHub Actions are placed into environment variables and work in concert with least-privileged AWS users/policies to perform tasks such as updating the CloudFormation stack, PUT requests to S3 and CloudFront cache invalidation. These use long-lived credentials (access keys), which although encrypted, do not apply security best practices and for this reason most companies have moved away from using them.
-            AWS highly recommend implementing IAM Roles to issue STS (Security Token Service) calls such as <i>sts:AssumeRole</i> and <i>sts:AssumeRoleWithWebIdentity</i>. This provides temporary access credentials by issuing an Access Key, a Secret Access Key and a Security Token. The time-limited nature of security tokens makes them by definition more secure than using long-lived credentials. I aim to create Roles and integrate them with GitHib Actions as the main future enhancement for the site.
+            While good security practices have been followed, the implementation of this website includes some IAM issues which can be addressed. Encrypted secrets used by GitHub Actions are placed into environment variables and work in concert with least-privileged AWS users/policies to perform tasks such as updating the CloudFormation stack, PUT requests to S3 and CloudFront cache invalidation. These use long-lived credentials (access keys), which although encrypted, do not apply security best practices and for this reason most companies have moved away from using them.
+            AWS highly recommend implementing IAM Roles to issue STS (Security Token Service) calls such as <i>sts:AssumeRole</i> and <i>sts:AssumeRoleWithWebIdentity</i>. This provides temporary access credentials by issuing an Access Key, a Secret Access Key and a Security Token. The time-limited nature of security tokens makes them by definition more secure than using long-lived credentials. I aim to create Roles and integrate them with GitHib Actions as the main future enhancement.
         </p>
         
         <h3>
@@ -104,8 +104,8 @@
             <ul>
                 <li>Principally, I would have failed to meet the design spec of the Cloud Resume Challenge; reason enough to steer away from the S3 web hosting solution.</li>
                 <li>The site is HTTPS because it has a Route 53 hosted zone including an ACM (AWS Certificate Manager) certificate issued by the Amazon CA. This is more secure than a plain HTTP site hosted from an S3 bucket (or indeed anywhere which does not offer HTPPS).</li>
-                <li>The inclusion of a CloudFront Distribution provides the advantage of a CDN (edge and regional edge caches) which serve the site pages and assets. This makes site content available to a global userbase with decreased latency & jitter, regardless of which geography the user is located. Direct S3 bucket access cannot offer this. As mentioned in the Requirements section, <b>only</b> the Distribution can access the S3 origin, strengthening the security posture of the site. Due to the globally-distributed CloudFront CDN edge locations, some mitigation benefits against DDoS attacks may also be realised. When running production workloads, it is recommended that both WAF and Shield Advanced be considered for implementation.</li>
-                <li>In the S3 bucket properties, AWS recommend using <a href="https://aws.amazon.com/amplify/faqs/?trk=bde46bbc-b618-48e1-b86a-1dd4c35b930f&sc_channel=ps&ef_id=EAIaIQobChMIyuLR26TLjQMV15VQBh3RlxEGEAAYASABEgJ19vD_BwE:G:s&s_kwcid=AL!4422!3!647301968149!e!!g!!aws%20amplify!19621293721!146139123512&gad_campaignid=19621293721&gbraid=0AAAAADjHtp-McekRy0of67TMEVkfAd3-w&gclid=EAIaIQobChMIyuLR26TLjQMV15VQBh3RlxEGEAAYASABEgJ19vD_BwE" target="_blank">Amplify</a> versus S3 web hosting.</li>
+                <li>The inclusion of a CloudFront Distribution provides the advantage of a CDN (edge and regional edge caches) which serve the site pages and assets. This makes site content available to a global userbase with decreased latency & jitter, regardless of which geography the user is located. Direct S3 bucket access cannot offer this. As mentioned in the Requirements section, <b>only</b> the Distribution can access the S3 origin, strengthening the security posture of the site. Due to the globally-distributed CloudFront CDN edge locations, some mitigation benefits against DDoS attacks may also be realised. When running production workloads, WAF and Shield Advanced should also be implemented for improved web and DDoS protection.</li>
+                <li>Finally, in the S3 bucket properties, AWS recommend using <a href="https://aws.amazon.com/amplify/faqs/?trk=bde46bbc-b618-48e1-b86a-1dd4c35b930f&sc_channel=ps&ef_id=EAIaIQobChMIyuLR26TLjQMV15VQBh3RlxEGEAAYASABEgJ19vD_BwE:G:s&s_kwcid=AL!4422!3!647301968149!e!!g!!aws%20amplify!19621293721!146139123512&gad_campaignid=19621293721&gbraid=0AAAAADjHtp-McekRy0of67TMEVkfAd3-w&gclid=EAIaIQobChMIyuLR26TLjQMV15VQBh3RlxEGEAAYASABEgJ19vD_BwE" target="_blank">Amplify</a> for static web hosting instead of using S3.</li>
             </ul>
         </p>
 
