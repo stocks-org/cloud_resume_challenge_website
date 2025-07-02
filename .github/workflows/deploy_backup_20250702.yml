@@ -1,4 +1,4 @@
-name: Deploy to S3 and Invalidate CloudFront (Backup copy)
+name: Deploy to S3 and Invalidate CloudFront (old backup copy)
 
 on:
 #   push:
