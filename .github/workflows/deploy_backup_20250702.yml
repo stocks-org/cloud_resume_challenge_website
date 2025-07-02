@@ -1,6 +1,6 @@
 name: Deploy to S3 and Invalidate CloudFront (Backup copy)
 
-# on:
+on:
 #   push:
 #     branches: [ main ]
 #   pull_request:
