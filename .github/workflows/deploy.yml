@@ -37,21 +37,29 @@ jobs:
           role-session-name: GitHubActions-Deploy-${{ github.run_id }}
           aws-region: us-east-1
 
+      # - name: S3 Sync
+      #   uses: jakejarvis/s3-sync-action@v0.5.1
+      #   with:
+      #     args: --follow-symlinks --delete
+      #   env:
+      #     AWS_S3_BUCKET: ${{ secrets.S3_BUCKET_NAME }}
+      #     AWS_REGION: 'us-east-1'
+      #     SOURCE_DIR: ''
+
+      # - name: CloudFront Invalidation
+      #   uses: chetan/invalidate-cloudfront-action@master
+      #   env:
+      #     DISTRIBUTION: ${{ secrets.AWS_DISTRIBUTION }}
+      #     PATHS: '/*'
+      #     AWS_REGION: 'us-east-1'
+
       - name: S3 Sync
-        uses: jakejarvis/s3-sync-action@v0.5.1
-        with:
-          args: --follow-symlinks --delete
-        env:
-          AWS_S3_BUCKET: ${{ secrets.S3_BUCKET_NAME }}
-          AWS_REGION: 'us-east-1'
-          SOURCE_DIR: ''
+        run: |
+          aws s3 sync . s3://${{ secrets.S3_BUCKET_NAME }} --follow-symlinks --delete
 
       - name: CloudFront Invalidation
-        uses: chetan/invalidate-cloudfront-action@master
-        env:
-          DISTRIBUTION: ${{ secrets.AWS_DISTRIBUTION }}
-          PATHS: '/*'
-          AWS_REGION: 'us-east-1'
+        run: |
+          aws cloudfront create-invalidation --distribution-id ${{ secrets.AWS_DISTRIBUTION }} --paths "/*"
 
       - name: Wait 30 seconds to allow cache invalidation to complete
         run: sleep 30s
