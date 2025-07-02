@@ -37,22 +37,6 @@ jobs:
           role-session-name: GitHubActions-cloud_resume_challenge_website-${{ github.run_id }}
           aws-region: us-east-1
 
-      # - name: S3 Sync
-      #   uses: jakejarvis/s3-sync-action@v0.5.1
-      #   with:
-      #     args: --follow-symlinks --delete
-      #   env:
-      #     AWS_S3_BUCKET: ${{ secrets.S3_BUCKET_NAME }}
-      #     AWS_REGION: 'us-east-1'
-      #     SOURCE_DIR: ''
-
-      # - name: CloudFront Invalidation
-      #   uses: chetan/invalidate-cloudfront-action@master
-      #   env:
-      #     DISTRIBUTION: ${{ secrets.AWS_DISTRIBUTION }}
-      #     PATHS: '/*'
-      #     AWS_REGION: 'us-east-1'
-
       - name: S3 Sync
         run: |
           aws s3 sync . s3://${{ secrets.S3_BUCKET_NAME }} --follow-symlinks --delete
