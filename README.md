@@ -1,1 +1,1 @@
-A repository to hold website files for the Author's AWS Cloud Resume Challenge.
+Repository which holds website files for the Author's AWS Cloud Resume Challenge.
