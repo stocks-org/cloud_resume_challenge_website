@@ -10,7 +10,7 @@ on:
 jobs:
   deploy:
     runs-on: ubuntu-latest
-    # Add permissions needed for OIDC token
+    # Add permissions needed for private repository
     permissions:
       contents: read
       id-token: write
@@ -24,17 +24,16 @@ jobs:
           token: ${{ secrets.GITHUB_TOKEN }}
           # If you need to checkout submodules in private repos
           submodules: 'recursive'
-      
       - name: Replace API endpoint placeholder in HTML file
         run: |
           find . -name "*.html" -type f -exec sed -i "s|%%API_ENDPOINT%%|${{ secrets.API_ENDPOINT }}|g" {} +
 
-      # Configure AWS credentials using OIDC role
+      # Configure AWS credentials for private repo access
       - name: Configure AWS credentials
-        uses: aws-actions/configure-aws-credentials@v4
+        uses: aws-actions/configure-aws-credentials@v3
         with:
-          role-to-assume: arn:aws:iam::730335547410:role/GitHubActions-AssumeRole
-          role-session-name: GitHubActionsSession
+          aws-access-key-id: ${{ secrets.ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.SECRET_ACCESS_KEY }}
           aws-region: us-east-1
 
       - name: S3 Sync
@@ -43,8 +42,12 @@ jobs:
           args: --follow-symlinks --delete
         env:
           AWS_S3_BUCKET: ${{ secrets.S3_BUCKET_NAME }}
-          AWS_REGION: 'us-east-1'
-          SOURCE_DIR: ''
+          # These are now redundant as credentials are set in the previous step
+          # but keeping them for compatibility with the action
+          AWS_ACCESS_KEY_ID: ${{ secrets.ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.SECRET_ACCESS_KEY }}
+          AWS_REGION: 'us-east-1'    # optional: defaults to us-east-1
+          SOURCE_DIR: ''    # optional: defaults to entire repository
 
       - name: CloudFront Invalidation
         uses: chetan/invalidate-cloudfront-action@master
@@ -52,7 +55,11 @@ jobs:
           DISTRIBUTION: ${{ secrets.AWS_DISTRIBUTION }}
           PATHS: '/*'
           AWS_REGION: 'us-east-1'
+          AWS_ACCESS_KEY_ID: ${{ secrets.ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.SECRET_ACCESS_KEY }}
 
       - name: Wait 30 seconds to allow cache invalidation to complete
         run: sleep 30s
         shell: bash
+
+      # Any old commmands below here:
