@@ -99,7 +99,7 @@
                 <p>
                     As a starting assumption, I thought I'd need to setup an IdP (Identity Provider) using a service such as <a href="https://docs.aws.amazon.com/cognito/latest/developerguide/cognito-identity.html" target="_blank">Cognito Identity Pools</a>. 
                     This is untrue: Although it performs a service to generate temporary AWS credentials, Cognito Identity Pools is aimed more at issuing human users with temporary access credentials, where <i>sts:AssumeRoleWithWebIdentity</i> is used in concert with a WebID Provider such as a social network login.
-                    I did some digging into what I'd need to authenticate GitHub Actions with AWS and came across this <a href="https://aws.amazon.com/blogs/security/use-iam-roles-to-connect-github-actions-to-actions-in-aws/" target="_blank">AWS Security Blog by David Rowe</a>, which got me started. I also owe a shout to this useful <a href="https://www.youtube.com/watch?v=Hc_jrDpLMg8" target="_blank">four-part video by Siba N.</a> which explains much the same use case as a the security blog.
+                    I did some digging into what I'd need to authenticate GitHub Actions with AWS and came across this <a href="https://aws.amazon.com/blogs/security/use-iam-roles-to-connect-github-actions-to-actions-in-aws/" target="_blank">AWS Security Blog by David Rowe</a>, which got me started. I also owe a shout to this useful <a href="https://www.youtube.com/watch?v=Hc_jrDpLMg8" target="_blank">four-part video by Siba N.</a> which explains much the same use case.
                 </p>
                 <h4>Getting Going &#127939</h4>
                 <p>    
