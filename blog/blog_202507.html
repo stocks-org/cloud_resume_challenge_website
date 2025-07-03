@@ -92,7 +92,7 @@
                     I was happy that the IAM policies I had written earlier were good for reuse, as they allow access only to services required by the GitHub Actions workflows (least-privileged principle). 
                     What was not security best-practice was attaching the IAM policies to IAM users as inline policies, when using Roles is AWS recommended practice.
                     Not using Roles was however, only the minor part of the problem. The main crux of the matter is the long-lived access keys. 
-                    Even though the keys were encrypted as GitHub Actions Secrets and accessed within the workflow code using environment variables, the Access Keys and Secret Access Keys, if leaked, could provide a long-term access method into my AWS account. For this reason, they had to go!
+                    Even though the keys were encrypted as GitHub Actions Secrets and accessed within the workflow code using environment variables, the keys, if leaked, could provide a long-term access method into my AWS account. For this reason, they had to go!
                     Here, I will dive into the details of the conversion to using Roles with OIDC (OpenID Connect) and some GitHub-related growing pains.
                 </p>
                 <h4>Research &#128214</h4>
