@@ -1,143 +1,178 @@
 <!DOCTYPE html>
 <html>
-<head>
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<style>
-* {
-  box-sizing: border-box;
-}
+    <head>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style>
+    * {
+    box-sizing: border-box;
+    }
 
-/* Add a gray background color with some padding */
-body {
-  font-family: Arial;
-  padding: 20px;
-  background: #f1f1f1;
-}
+    /* Add a gray background color with some padding */
+    body {
+    font-family: Arial;
+    padding: 20px;
+    background: #f1f1f1;
+    }
 
-/* Header/Blog Title */
-.header {
-  padding: 30px;
-  font-size: 40px;
-  text-align: center;
-  background: white;
-}
+    /* Header/Blog Title */
+    .header {
+    padding: 30px;
+    font-size: 40px;
+    text-align: center;
+    background: white;
+    }
 
-/* Create two unequal columns that floats next to each other */
-/* Left column */
-.leftcolumn {   
-  float: left;
-  width: 75%;
-}
+    /* Create two unequal columns that floats next to each other */
+    /* Left column */
+    .leftcolumn {   
+    float: left;
+    width: 90%;
+    }
 
-/* Right column */
-.rightcolumn {
-  float: left;
-  width: 25%;
-  padding-left: 20px;
-}
+    /* Right column */
+    .rightcolumn {
+    float: left;
+    width: 10%;
+    padding-left: 20px;
+    }
 
-/* Fake image */
-.fakeimg {
-  background-color: #aaa;
-  width: 100%;
-  padding: 20px;
-}
-
-/* Add a card effect for articles */
-.card {
-   background-color: white;
-   padding: 20px;
-   margin-top: 20px;
-}
-
-/* Clear floats after the columns */
-.row:after {
-  content: "";
-  display: table;
-  clear: both;
-}
-
-/* Footer */
-.footer {
-  padding: 20px;
-  text-align: center;
-  background: #ddd;
-  margin-top: 20px;
-}
-
-/* Responsive layout - when the screen is less than 800px wide, make the two columns stack on top of each other instead of next to each other */
-@media screen and (max-width: 800px) {
-  .leftcolumn, .rightcolumn {   
+    /* Fake image */
+    .fakeimg {
+    background-color: #aaa;
     width: 100%;
-    padding: 0;
-  }
-}
-</style>
-</head>
-<body>
+    padding: 20px;
+    }
 
-<div class="header">
-  <h2>Stocksy's Blog</h2>
-</div>
+    /* Add a card effect for articles */
+    .card {
+    background-color: white;
+    padding: 20px;
+    margin-top: 20px;
+    }
 
-<div class="row">
-  <div class="leftcolumn">
-    <div class="card">
-      <h2>TITLE HEADING</h2>
-      <h5>Title description, Dec 7, 2017</h5>
-      <div class="fakeimg" style="height:200px;">Image</div>
-      <p>Some text..</p>
-    </div>
-    <div class="card">
-      <h2>TITLE HEADING</h2>
-      <h5>Title description, Sep 2, 2017</h5>
-      <div class="fakeimg" style="height:200px;">Image</div>
-      <p>
-        <object
-            data="../assets/website_architecture.pdf"
-            type="application/pdf"
-            width="100%"
-            height="1000"
-            title="Website Architecture PDF"
-        >
-            <iframe
-                src="../assets/website_architecture.pdf"
-                width="100%"
-                height="100%"
-                style="border: none"
-                title="Fallback PDF Viewer"
-            >
+    /* Clear floats after the columns */
+    .row:after {
+    content: "";
+    display: table;
+    clear: both;
+    }
+
+    /* Footer */
+    .footer {
+    padding: 20px;
+    text-align: center;
+    background: #ddd;
+    margin-top: 20px;
+    }
+
+    /* Responsive layout - when the screen is less than 800px wide, make the two columns stack on top of each other instead of next to each other */
+    @media screen and (max-width: 800px) {
+    .leftcolumn, .rightcolumn {   
+        width: 100%;
+        padding: 0;
+    }
+    }
+    </style>
+    </head>
+
+    <body>
+
+        <div class="header">
+        <h2>Stocksy's Cloud Blog</h2>
+        </div>
+
+        <div class="row">
+        <div class="leftcolumn">
+            <div class="card">
+            <h2>JULY 2025</h2>
+            <h5>Title description, Dec 7, 2017</h5>
+            <div class="fakeimg" style="height:200px;">Image</div>
+            <p>Some text..</p>
+            </div>
+            <div class="card">
+            <h2>TITLE HEADING</h2>
+            <h5>Title description, Sep 2, 2017</h5>
+            <div class="fakeimg" style="height:200px;">Image</div>
+            <p>
+                <object
+                    data="../assets/website_architecture.pdf"
+                    type="application/pdf"
+                    width="150%"
+                    height="150%"
+                    title="Website Architecture PDF"
+                >
+                    <iframe
+                        src="../assets/website_architecture.pdf"
+                        width="150%"
+                        height="150%"
+                        style="border: none"
+                        title="Fallback PDF Viewer"
+                    >
+                        <p>
+                            Your browser does not support PDFs.
+                            [<a href="../assets/website_architecture.pdf" target="_blank">Download the PDF</a>]
+                        </p>
+                    </iframe>
+                </object>
+            </p>
+            </div>
+        </div>
+            <div class="card">
+            <h3>Previous Blogs</h3>
                 <p>
-                    Your browser does not support PDFs.
-                    [<a href="../assets/website_architecture.pdf" target="_blank">Download the PDF</a>]
+                    <a href="/blog/blog_202505.html">May 2025</a>
                 </p>
-            </iframe>
-        </object>
-      </p>
-    </div>
-  </div>
-  <!-- <div class="rightcolumn">
-    <div class="card">
-      <h2>About Me</h2>
-      <div class="fakeimg" style="height:100px;">Image</div>
-      <p>Some text about me in culpa qui officia deserunt mollit anim..</p>
-    </div> -->
-    <div class="card">
-      <h3>Previous Blogs</h3>
-        <p>
-            <a href="/blog/blog_202505.html">May 2025</a>
-        </p>
-    </div>
-    <!-- <div class="card">
-      <h3>Follow Me</h3>
-      <p>Some text..</p>
-    </div>
-  </div> -->
-</div>
+            </div>
+        </div>
 
-<div class="footer">
-  <h2>Footer</h2>
-</div>
+        <div class="footer">
+            <h2>
+                <a href="../">Home</a>
+            </h2>
+        </div>
 
-</body>
+        <!-- Hit counter, written by Claude AI -->
+        <div id="hitCounter">Hit Counter: Loading...</div>
+        
+        <script>
+            document.addEventListener('DOMContentLoaded', () => {
+                try {
+                    const counter = document.getElementById('hitCounter');
+                    if (!counter) return; // Exit if element not found
+                    
+                    // Get the page path to use as a unique identifier
+                    const pagePath = window.location.pathname;
+
+                    // API_ENDPOINT env var will be replaced during build time
+                    const apiEndpoint = '%%API_ENDPOINT%%/incrementCounter';
+
+                    // Call the API Gateway endpoint to increment the counter
+                    fetch(apiEndpoint, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({ pagePath: pagePath })
+                    })
+                    .then(response => {
+                        if (!response.ok) {
+                            throw new Error('Network response was not ok');
+                        }
+                        return response.json();
+                    })
+                    .then(data => {
+                        // Update the counter with the value from the DB
+                        counter.textContent = 'Hit Counter: ' + data.count;
+                    })
+                    .catch(error => {
+                        console.error('Error updating hit counter:', error);
+                        counter.textContent = 'Hit Counter: Error';
+                    });
+                } catch (error) {
+                    console.log('Hit counter error:', error);
+                }
+            });
+        </script>
+
+    </body>
 </html>
