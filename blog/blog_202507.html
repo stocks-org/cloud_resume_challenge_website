@@ -86,16 +86,22 @@
             <div class="card">
                 <h2>JULY 2025</h2>
                 <h3>Site now uses IAM Roles & OIDC to run GitHub Actions &#128640</h3>
-                    <p>
-                        Some text..
-                    </p>
+                <p>
+                    In the previous blog (Future Improvements section), I recognised that a security issue existed with my implementation. This was that long-lived credentials in the form of an access key and secret access key, attached to IAM users,
+                    were being used to handle calls to STS (Security Token Service), which in turn passes an access token to GitHub Actions, which in turn can access AWS services when it runs a workflow.
+                    I was happy with the IAM policies I had written and these were good for reuse. What I recognised as not being security best-practice was attaching these policies to IAM users as Inline policies, when using Roles is AWS recommended practice.
+                    Here, I dive into the details of the conversion to using Roles, OIDC (OpenID Connect) and some GitHub-related growing pains.
+                </p>
+                <p>
+                    More text..
+                </p>
             </div>
                 <p>
                     <object
                         data="../assets/website_architecture.pdf"
                         type="application/pdf"
-                        width="150%"
-                        height="1500"
+                        width="100%"
+                        height="1000"
                         title="Website Architecture PDF"
                     >
                         <iframe
@@ -112,12 +118,10 @@
                         </iframe>
                     </object>
                 </p>
-
-                    <p>
-                        More text..
-                    </p>
-
             </div>
+                <p>
+                    More text..
+                </p>
         </div>
             <div class="card">
             <h3>Previous Blogs</h3>
