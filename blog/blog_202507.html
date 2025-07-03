@@ -95,12 +95,13 @@
                     Even though the keys were encrypted in GitHub as Actions Secrets and accessed in the GitHub Actions workflow code using environment variables, the Access Keys and Secret Access Keys, if leaked, could provide a long-term access method into my AWS account. For this reason, they had to go!
                     Here, I will dive into the details of the conversion to using Roles with OIDC (OpenID Connect) and some GitHub-related growing pains.
                 </p>
+                <h3>Background</h3>
                 <p>
-                    As a starting assumption, I thought I'd need to setup an IdP (Identity Provider) using a service such as <a href="https://docs.aws.amazon.com/cognito/latest/developerguide/cognito-identity.html" target="_blank">Cognito Identity Pools</a>. This is untrue, although performing a service to generate temporary AWS credentials, Cognito Identity pools is aimed more at granting human users with temporary access credentils.
-                    I did some digging and came across this <a href="https://aws.amazon.com/blogs/security/use-iam-roles-to-connect-github-actions-to-actions-in-aws/" target="_blank">Security Blog by David Rowe</a> which got me started. I realised two things:
+                    As a starting assumption, I thought I'd need to setup an IdP (Identity Provider) using a service such as <a href="https://docs.aws.amazon.com/cognito/latest/developerguide/cognito-identity.html" target="_blank">Cognito Identity Pools</a>. This is untrue: Although it performs a service to generate temporary AWS credentials, Cognito Identity Pools is aimed more at granting human users with temporary access credentials.
+                    I did some digging into what I'd need to authenticate GitHub Actions to AWS and came across this <a href="https://aws.amazon.com/blogs/security/use-iam-roles-to-connect-github-actions-to-actions-in-aws/" target="_blank">AWS Security Blog by David Rowe</a>, which got me started. I realised two things:
                     <ul>
-                        <li>I didn't need to run an Identity Pool, as I needed was an IAM Identity Provider and a few connection details provided in the blog. Great!</li>
-                        <li>Although not overly stressed in the blog, I soon realised I would need to create a GitHub Organization, something I'd hadn't needed to date. All my repos are stored in a personal account, but the addition of an Organization is a mandated field within the IAM Identity Provider options.</li>
+                        <li>I didn't need to create/run an Identity Pool. All I needed was to create an IAM Identity Provider and add a few connection details provided in the blog. The details are used to create a Trust Relationship within the IAM Role attached to the Identity Provider. Great!</li>
+                        <li>Although it's not overly stressed in the blog, I soon realised I would need to create a GitHub Organization, something I'd hadn't needed to date. All my repos are stored in a personal account, but the addition of an Organization is a mandated field within the IAM Identity Provider options.</li>
                     </ul>
                 </p>
             </div>
