@@ -87,10 +87,12 @@
                 <h2>JULY 2025</h2>
                 <h3>Site now uses IAM Roles & OIDC to run GitHub Actions &#128640</h3>
                 <p>
-                    In the previous blog (Future Improvements section), I recognised that a security issue existed with my implementation. This was that long-lived credentials in the form of an access key and secret access key, attached to IAM users,
-                    were being used to handle calls to STS (Security Token Service), which in turn passes an access token to GitHub Actions, which in turn can access AWS services when it runs a workflow.
-                    I was happy with the IAM policies I had written and these were good for reuse. What I recognised as not being security best-practice was attaching these policies to IAM users as Inline policies, when using Roles is AWS recommended practice.
-                    Here, I dive into the details of the conversion to using Roles, OIDC (OpenID Connect) and some GitHub-related growing pains.
+                    In the previous blog (Future Improvements section), I recognised that a security issue existed with my implementation. Long-lived credentials, in the form of an access key and secret access key and attached to IAM users
+                    were being used to handle the calls to STS (Security Token Service). STS generated and passes access tokens to GitHub Actions (short-lived tokens), which in turn are used by GitHub Actions workflows to access and use AWS services.
+                    I was happy that the IAM policies I had written earlier were good for reuse, as they allow access only to services required by the GitHub Actions workflows (least-privileged principle). 
+                    What I recognised as not security best-practice was attaching the policies to IAM users as inline policies, when using Roles is AWS recommended practice.
+                    Even though they were encrypted in GitHub as Actions Secrets, the AWS Access Keys and Secret Access Keys, if leaked, could provide a long-term access method into my AWS account. For this reason, they had to go!
+                    Here, I will dive into the details of the conversion to using Roles, OIDC (OpenID Connect) and some GitHub-related growing pains.
                 </p>
                 <p>
                     More text..
