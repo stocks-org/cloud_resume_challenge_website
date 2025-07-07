@@ -123,8 +123,8 @@
                     <h4>STOP using Access Keys stored as GitHub Secrets and START using role-to-assume &#128274</h4>
                     
                     <p>
-                        This is probably best explained by showing the old and new GitHub Workflow files as a comparison. In the old workflow file, the ${{ secrets.ACCESS_KEY_ID }} and ${{ secrets.SECRET_ACCESS_KEY }} are run in the "Configure AWS Credentials" step, which uses the GitHub Actions workflow aws-actions/configure-aws-credentials@v3
-                        Although the actual keys are not exposed in code, they are long-lived access keys which exist against a user in my AWS account, meaning they could potentially be leaked! It was important to cease using the keys.
+                        This is probably best explained by showing the old and new GitHub Workflow files as a comparison. In the old workflow file, the ${{ secrets.ACCESS_KEY_ID }} and ${{ secrets.SECRET_ACCESS_KEY }} are run in the "Configure AWS Credentials" step, which uses the GitHub Actions workflow aws-actions/configure-aws-credentials@v3.
+                        Although the secret values are not exposed in code or in the workflow output, these are long-lived access keys which existed against a user in my AWS account, meaning they could potentially be leaked. It was an important security improvement to cease using these keys altogether. They have since been deleted from my AWS account.
                     </p>
                     <p>
                         <i>Fig 2: Shows the GitHub Actions workflow as it used to be, using the Access Key and Secret Access Key to authenticate and use AWS services.</i>
