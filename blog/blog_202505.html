@@ -98,7 +98,7 @@
                         I used the MOSCOW method (MUST, SHOULD, COULD, WONT) as described below. Although all requirements might be judged initially to be MUST, where appropriate I used tooling which allows for some improvements versus the original design spec.
 
                         <ol type="1">
-                            <li>MUST implement Security best practices: I've used principle of least privilege for all IAM users and policies. Data is encrypted in transit (HTTPS with TLSv1.3) and data is encrypted at rest (table objects using DynamoDB-owned KMS key, bucket objects using SSE-S3). I've added a bucket policy which only allows a CloudFront Distribution endpoint to access the S3 origin using Origin Access Control.</li>
+                            <li>MUST implement Security best practices: I've used principle of least privilege for all IAM users and policies. Data is encrypted in transit (HTTPS with TLSv1.3) and data is encrypted at rest (DynamoDB table objects using DynamoDB-owned KMS key, S3 bucket objects using SSE-S3). I've added a bucket policy which only allows a CloudFront Distribution endpoint to access the S3 origin using Origin Access Control.</li>
                             <li>MUST utilise Cost Optimization and Performance Efficiency: A Serverless architecture with on-demand (pay-per-use) DynamoDB table, API Gateway fronting a Lambda function which updates the site hit counter instead of long-running EC2 instances or a Container platform for compute. Lambda is always free up to 1 million invocations per month :)</li>
                             <li>MUST apply Operational Excellence: Using DevOps automation and event-driven architectures, the website's backend and frontend is deployed through GitHub Actions upon git push to the Main repo branch. Monitoring for failed GitHub pipelines and CloudWatch monitoring are both available out-of-the-box, further improving operational responsiveness.</li>
                             <li>MUST perform Reliably: By leveraging AWS-managed services, the site is highly available within a single region, easily achieving enough reliability for my static website use case.</li>
@@ -123,7 +123,7 @@
                             <iframe
                                 src="../assets/website_architecture.pdf"
                                 width="100%"
-                                height="100%"
+                                height="80%"
                                 style="border: none"
                                 title="Fallback PDF Viewer"
                             >
