@@ -121,6 +121,7 @@
                     <img src="../assets/trust_relationship.png" alt="AWS Trust Relationship image" width="75%" height="75%" class="center">
 
                     <h4>STOP using Access Keys stored as GitHub Secrets and START using role-to-assume &#128274</h4>
+                    
                     <p>
                         This is probably best explained by showing the old and new GitHub Workflow files as a comparison. In the old workflow file, the ${{ secrets.ACCESS_KEY_ID }} and ${{ secrets.SECRET_ACCESS_KEY }} are run in the "Configure AWS Credentials" step, which uses the GitHub Actions workflow aws-actions/configure-aws-credentials@v3
                         Although the actual keys are not exposed in code, they are long-lived access keys which exist against a user in my AWS account, meaning they could potentially be leaked! It was important to cease using the keys.
@@ -128,8 +129,10 @@
                     <p>
                         <i>Fig 2: Shows the GitHub Actions workflow as it used to be, using the Access Key and Secret Access Key to authenticate and use AWS services.</i>
                     </p>
+                    <img src="../assets/cloud_resume_challenge_website_old_workflow.png" alt="GitHub Actions old workflow showing Secrets being used" width="75%" height="75%" class="center">
+                    
                     <p>
-                        The update to using OIDC tokens is shown below in the new workflow file. It replaces the GitHub secrets with role-to-assume and role-session-name, again using aws-actions/configure-aws-credentials@v4 (I bumped to the latest version as part of rewriting the workflow).
+                        The update to using OIDC tokens is shown below in the new workflow file below. It replaces the GitHub secrets with role-to-assume and role-session-name, again using aws-actions/configure-aws-credentials@v4 (I bumped to the latest version as part of rewriting the workflow).
                     </p>
                     <p>    
                         New workflow key/values:
@@ -141,7 +144,7 @@
                     <p>
                         <i>Fig 3: The GitHub Actions workflow as it is now, using role-to-assume ARN which allows the OIDC assume role to authenticate and use AWS services. Note the ARN matches the ARN in Fig 1 - this is the AWS Role & Trust Relationship being used by the GitHub OIDC.</i> (Obfuscated items: AWS Account ID, assumedRoleId).
                     </p>
-                    <img src="../assets/cloud_resume_challenge_website_old_workflow.png" alt="GitHub Actions old workflow showing Secrets being used" width="75%" height="75%" class="center">
+                    <img src="../assets/cloud_resume_challenge_website_new_workflow.png" alt="GitHub Actions new workflow showing assumedRoleId being used" width="75%" height="75%" class="center">
 
                 </div>
                     <p>
