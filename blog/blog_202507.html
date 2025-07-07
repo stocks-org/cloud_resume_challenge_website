@@ -112,7 +112,7 @@
                         <ul>
                             <li>As above, I didn't need to create/run an Identity Pool. All I needed on the AWS side was to create an IAM Identity Provider, add a few GitHub details provided in the blog, and attach it to a Role. The GitHub details are used to establish a Trust Relationship, embedded within the IAM Role, to the OIDC Provider. Great!</li>
                             <li>Although not overly stressed in the blog, I would need to create a GitHub Organization, something I hadn't needed to date. All my repos were previously stored in a personal account, but use of an Organization is a mandated field within the IAM Identity Provider options.
-                                The Organization had to be created and my repos transferred into it. This proved to be a little painful and took me a couple of hours, because my existing GitHub PAT (Personal Access Token) refused to co-operate with the new Organization, leading me to generate a replacement PAT and associate it with the Organization. This once again allowed me to pull/push code from/to the webiste & backend repos, now located within the Organization.</li>
+                                The Organization had to be created and my repos transferred into it. This proved to be a little painful and took me a couple of hours, because my existing GitHub PAT (Personal Access Token) refused to co-operate with the new Organization, leading me to generate a replacement PAT and associate it with the Organization. This once again allowed me to pull/push code from/to the website & backend repos, which now reside within the Organization.</li>
                         </ul>
                     </p>
                     <p>
@@ -123,13 +123,13 @@
                     <h4>STOP using Access Keys stored as GitHub Secrets and START using role-to-assume &#128274</h4>
                     
                     <p>
-                        This is probably best explained by showing the old and new GitHub Workflow files as a comparison. In the old workflow, the aws-access-key-id and aws-secret-access-key GitHib Secrets are accessed by the "Configure AWS Credentials" step, which uses the workflow 'aws-actions/configure-aws-credentials@v3'.
-                        Although the secret values are not exposed in code or in the workflow output, these are long-lived access keys which existed against a user in my AWS account, meaning they could potentially be leaked. It was an important security improvement to cease using these keys altogether. They have since been deleted from my AWS account.
+                        This is probably best explained by showing the old and new GitHub Actions output as a comparison. In the old workflow, the aws-access-key-id and aws-secret-access-key GitHub Secrets are accessed in the step named "Configure AWS Credentials". This uses the workflow 'aws-actions/configure-aws-credentials@v3'.
+                        Although the secret values are not exposed in code or in the workflow output, they were long-lived access keys which existed under a User in my AWS account, meaning they could potentially be leaked. It was an important security posture improvement to cease using these keys. The keys have since been deleted from my AWS account.
                     </p>
                     <p>
                         <i>Fig 2: Shows the GitHub Actions workflow as it used to be, using the Access Key and Secret Access Key to authenticate and use AWS services.</i>
                     </p>
-                    <img src="../assets/cloud_resume_challenge_website_old_workflow.png" alt="GitHub Actions old workflow showing Secrets being used" width="75%" height="75%" class="center">
+                    <img src="../assets/cloud_resume_challenge_website_old_workflow.png" alt="GitHub Actions old workflow showing Secrets being used" width="100%" height="100%" class="center">
                     
                     <p>
                         The update to using OIDC tokens is shown below in the new workflow file below. It replaces the GitHub secrets with role-to-assume and role-session-name, using workflow 'aws-actions/configure-aws-credentials@v4' (I bumped to using v4 rather than v3 as part of rewriting the workflow).
@@ -144,7 +144,7 @@
                     <p>
                         <i>Fig 3: The GitHub Actions workflow as it is now, using role-to-assume ARN which allows the OIDC assume role to authenticate and use AWS services. Note the ARN matches the ARN in Fig 1 - this is the AWS Role & Trust Relationship being used by the GitHub OIDC.</i> (Obfuscated items: AWS Account ID, assumedRoleId).
                     </p>
-                    <img src="../assets/cloud_resume_challenge_website_new_workflow.png" alt="GitHub Actions new workflow showing assumedRoleId being used" width="75%" height="75%" class="center">
+                    <img src="../assets/cloud_resume_challenge_website_new_workflow.png" alt="GitHub Actions new workflow showing assumedRoleId being used" width="100%" height="100%" class="center">
 
                 </div>
                     <p>
