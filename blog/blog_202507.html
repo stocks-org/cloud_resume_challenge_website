@@ -123,7 +123,7 @@
                     <h4>STOP using Access Keys stored as GitHub Secrets and START using role-to-assume &#128274</h4>
                     
                     <p>
-                        This is probably best explained by showing the old and new GitHub Workflow files as a comparison. In the old workflow file, the ${{ secrets.ACCESS_KEY_ID }} and ${{ secrets.SECRET_ACCESS_KEY }} are run in the "Configure AWS Credentials" step, which uses the GitHub Actions workflow aws-actions/configure-aws-credentials@v3.
+                        This is probably best explained by showing the old and new GitHub Workflow files as a comparison. In the old workflow, the aws-access-key-id and aws-secret-access-key GitHib Secrets are accessed by the "Configure AWS Credentials" step, which uses the workflow 'aws-actions/configure-aws-credentials@v3'.
                         Although the secret values are not exposed in code or in the workflow output, these are long-lived access keys which existed against a user in my AWS account, meaning they could potentially be leaked. It was an important security improvement to cease using these keys altogether. They have since been deleted from my AWS account.
                     </p>
                     <p>
@@ -132,7 +132,7 @@
                     <img src="../assets/cloud_resume_challenge_website_old_workflow.png" alt="GitHub Actions old workflow showing Secrets being used" width="75%" height="75%" class="center">
                     
                     <p>
-                        The update to using OIDC tokens is shown below in the new workflow file below. It replaces the GitHub secrets with role-to-assume and role-session-name, again using aws-actions/configure-aws-credentials@v4 (I bumped to the latest version as part of rewriting the workflow).
+                        The update to using OIDC tokens is shown below in the new workflow file below. It replaces the GitHub secrets with role-to-assume and role-session-name, using workflow 'aws-actions/configure-aws-credentials@v4' (I bumped to using v4 rather than v3, as part of rewriting the workflow).
                     </p>
                     <p>    
                         New workflow key/values:
