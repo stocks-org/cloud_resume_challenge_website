@@ -144,7 +144,9 @@
                     </p>
                     <p>
                         <i>Fig 3: The new GitHub Actions workflow, applies a role-to-assume ARN which allows the OIDC assume role to authenticate and use AWS services. Note the ARN matches the ARN in Fig 1 - this is the AWS Role & Trust Relationship being used by the GitHub OIDC.</i> (Obfuscated items: AWS Account ID, assumedRoleId).
-                        Since taking the screenshot, I've made a further improvement by adding the role-to-assume value as a GitHub Secret (encrypted), which is called as an environment variable, removing my AWS Account ID from the workflow code.
+                    </p>
+                    <p>
+                        Since taking the screenshot, I've made a further improvement by adding the role-to-assume value as a GitHub Secret (encrypted), called as an environment variable as 'role-to-assume: ${{ secrets.AWS_IAM_ROLE }}'. This removes my AWS Account ID from the workflow code, further enhancing account security.
                     </p>
                     <img src="../assets/cloud_resume_challenge_website_new_workflow.png" alt="GitHub Actions new workflow showing assumedRoleId being used" width="100%" height="100%" class="center">
 
