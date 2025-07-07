@@ -86,15 +86,15 @@
             <div class="leftcolumn">
                 <div class="card">
 
-                    <h2>Stockscloud Website is Live! &#128640</h2>
+                    <h2>StocksCloud Website is Live &#128640</h2>
 
                     <p>
-                        Welcome to my Blog!
+                        Welcome to my blog!
                     </p>
 
-                    <h4>Requirements &#128214</h4>
+                    <h4>Requirements &#128466</h4>
                     <p>
-                        Given the requirements in <a href="https://cloudresumechallenge.dev/docs/the-challenge/aws/" target="_blank">The Cloud Resume Challenge - AWS</a>, the stockscloud website was built with several architecture principles in mind based on my interpretation of the design spec while considering the six pillars of the <a href="https://aws.amazon.com/architecture/well-architected/?wa-lens-whitepapers.sort-by=item.additionalFields.sortDate&wa-lens-whitepapers.sort-order=desc&wa-guidance-whitepapers.sort-by=item.additionalFields.sortDate&wa-guidance-whitepapers.sort-order=desc" target="_blank">AWS Well-Architected Framework</a>.
+                        Given the requirements in <a href="https://cloudresumechallenge.dev/docs/the-challenge/aws/" target="_blank">The Cloud Resume Challenge - AWS</a>, the StocksCloud website was built with several architecture principles in mind based on my interpretation of the design spec while considering the six pillars of the <a href="https://aws.amazon.com/architecture/well-architected/?wa-lens-whitepapers.sort-by=item.additionalFields.sortDate&wa-lens-whitepapers.sort-order=desc&wa-guidance-whitepapers.sort-by=item.additionalFields.sortDate&wa-guidance-whitepapers.sort-order=desc" target="_blank">AWS Well-Architected Framework</a>.
                         I used the MOSCOW method (MUST, SHOULD, COULD, WONT) as described below. Although all requirements might be judged initially to be MUST, where appropriate I used tooling which allows for some improvements versus the original design spec.
 
                         <ol type="1">
@@ -103,7 +103,7 @@
                             <li>MUST apply Operational Excellence: Using DevOps automation and event-driven architectures, the website's backend and frontend is deployed through GitHub Actions upon git push to the Main repo branch. Monitoring for failed GitHub pipelines and CloudWatch monitoring are both available out-of-the-box, further improving operational responsiveness.</li>
                             <li>MUST perform Reliably: By leveraging AWS-managed services, the site is highly available within a single region, easily achieving enough reliability for my static website use case.</li>
                             <li>MUST consider Sustainability: Employing a Serverless architecture ensures that workloads only run for as long as necessary. Using CDK templates and CloudFormation stacks means that infrastructure is declarative and can be quickly disposed of when no longer required.</li>
-                            <li>SHOULD use CI/CD, HTML, CSS and a JavaScript website hit counter for the frontend and store code in source control: I hand-crafted much of the HTML but found that I couldn't write a JavaScript hitcounter function! Here, I leant on <a href=https://claude.ai/" target="_blank">Claude AI</a> to assist me with writing the JavaScript function to interface with a REST API Gateway endpoint. The API invokes a Python 3.9 Lambda function to increment the page hit count. The hit count is persisted in a DynamoDB table. CSS is used to style the HTML body elements of each page.</li>
+                            <li>SHOULD use CI/CD, HTML, CSS and a JavaScript website hit counter for the frontend and store code in source control: I hand-crafted much of the HTML but found that I couldn't write a JavaScript hitcounter function! Here, I leant on <a href="//claude.ai/" target="_blank">Claude AI</a> to assist me with writing the JavaScript function to interface with a REST API Gateway endpoint. The API invokes a Python 3.9 Lambda function to increment the page hit count. The hit count is persisted in a DynamoDB table. CSS is used to style the HTML body elements of each page.</li>
                             <li>SHOULD use an API, Python (including Tests), a Database and CI/CD for the backend: I utilised GitHub Actions, enabling the backend components to be created as a single CloudFormation stack using <i>cdk deploy</i> within the GitHub Actions workflow. The CDK template was written in TypeScript; coding was again ably assisted by Claude AI who wrote much of the template.</li>
                             <li>COULD use SAM (Serverless Application Model) templates to define the backend infrastructure and store code in source control: Here I deviated from the design spec by opting to use CDK (Cloud Development Kit), a well-supported AWS framework for defining infrastructure-as-code in a number of popular languages. I opted for TypeScript due to its support by AWS and usage within my own business environments, allowing me to upskill in CDK. I covered the CI/CD requirements by implementing GitHub Actions workflows for both the frontend (website) and backend (infrastructure) repos and set the workflows to run upon a git push to the Main branch.</li>
                             <li>COULD write a blog post about my experience. I did!</li>
