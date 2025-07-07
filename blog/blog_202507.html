@@ -83,7 +83,7 @@
         </div>
 
         <div class="row">
-            
+
             <div class="leftcolumn">
                 <div class="card">
 
@@ -102,7 +102,7 @@
                     <h4>Research &#128214</h4>
                     <p>
                         As a starting assumption, I thought I'd need to setup an IdP (Identity Provider) using a service such as <a href="https://docs.aws.amazon.com/cognito/latest/developerguide/cognito-identity.html" target="_blank">Cognito Identity Pools</a>. 
-                        This is untrue: Although it performs a service to generate temporary AWS credentials, Cognito Identity Pools is aimed more at issuing human users with temporary access credentials, where the call <i>sts:AssumeRoleWithWebIdentity</i> is used in concert with a WebID Provider such as a social network login.
+                        This is untrue: Although it performs a service to generate temporary AWS credentials, Cognito Identity Pools is aimed more at issuing human users with temporary access credentials, where the call <i>sts:AssumeRoleWithWebIdentity</i> is used alongside a WebID Provider such as a social network login.
                         I did some digging into what I'd need to authenticate GitHub Actions with AWS and came across this <a href="https://aws.amazon.com/blogs/security/use-iam-roles-to-connect-github-actions-to-actions-in-aws/" target="_blank">AWS Security Blog by David Rowe</a>, which got me started. A further <a href="https://docs.github.com/en/actions/how-tos/security-for-github-actions/security-hardening-your-deployments/configuring-openid-connect-in-amazon-web-services" target="_blank">GitHub Doc</a> explains the OIDC concept from GitHub's perspective. 
                         I also owe a shout to this useful <a href="https://www.youtube.com/watch?v=Hc_jrDpLMg8" target="_blank">four-part video by Siba N.</a> which explains much the same use case.
                     </p>
@@ -128,7 +128,7 @@
                         Although the secret values are not exposed in code or in the workflow output, they were long-lived access keys which existed under a User in my AWS account, meaning they could potentially be leaked.
                     </p>
                     <p>
-                        <i>Fig 2: Shows the GitHub Actions workflow as it used to be, using the Access Key and Secret Access Key to authenticate and use AWS services.</i>
+                        <i>Fig 2: The old GitHub Actions workflow, using an Access Key and Secret Access Key with an IAM User & Inline Policy to authenticate and use AWS services.</i>
                     </p>
                     <img src="../assets/cloud_resume_challenge_website_old_workflow.png" alt="GitHub Actions old workflow showing Secrets being used" width="100%" height="100%" class="center">
                     
@@ -143,13 +143,14 @@
                         </ul>
                     </p>
                     <p>
-                        <i>Fig 3: The GitHub Actions workflow as it is now, using role-to-assume ARN which allows the OIDC assume role to authenticate and use AWS services. Note the ARN matches the ARN in Fig 1 - this is the AWS Role & Trust Relationship being used by the GitHub OIDC.</i> (Obfuscated items: AWS Account ID, assumedRoleId).
+                        <i>Fig 3: The new GitHub Actions workflow, applies a role-to-assume ARN which allows the OIDC assume role to authenticate and use AWS services. Note the ARN matches the ARN in Fig 1 - this is the AWS Role & Trust Relationship being used by the GitHub OIDC.</i> (Obfuscated items: AWS Account ID, assumedRoleId).
+                        Since taking the screenshot, I've made a further improvement by adding the role-to-assume value as a GitHub Secret (encrypted), which is called as an environment variable, removing my AWS Account ID from the workflow code.
                     </p>
                     <img src="../assets/cloud_resume_challenge_website_new_workflow.png" alt="GitHub Actions new workflow showing assumedRoleId being used" width="100%" height="100%" class="center">
 
                     <h4>Conclusion &#x1F9EA</h4>
                     <p>
-                        It was an important security posture improvement to cease using access keys in my GitHub Actions automation pipelines. This has been achieved: the keys are now redundant and have been deleted from my AWS account &#129395
+                        It was an important security improvement to stop using access keys in my GitHub Actions automation pipelines. This has been achieved: the keys are now redundant and have been deleted from my AWS account &#129395
                     </p>
 
                 </div>
