@@ -90,9 +90,9 @@
                     <h2>Site now uses IAM Roles & OIDC to run GitHub Actions &#128640</h2>
 
                     <p>
-                        In the previous blog (Future Improvements section), I recognised that a security issue existed within my website implementation. Long-lived credentials, in the form of access keys and secret access keys were attached to IAM users. 
+                        In the previous blog (Future Improvements section), I recognised that a security issue existed within my website implementation. Long-lived credentials, in the form of access keys and secret access keys were attached to IAM Users. 
                         These creds were used to handle calls to STS (AWS Security Token Service). STS generated and passed short-lived access tokens to GitHub Actions, which in turn were used by GitHub Actions workflows to use AWS services every time the workflow was triggered.
-                        I was happy that the IAM policies I had written earlier were good for reuse, as they allow access only to services required by the GitHub Actions workflows (least-privileged principle). 
+                        I was happy that the IAM Policies I had written earlier were good for reuse, as they allow access only to services required by the GitHub Actions workflows (least-privileged principle). 
                         What was not security best-practice was attaching the IAM policies to IAM users as inline policies, when using Roles is AWS recommended practice.
                         Not using Roles was however, only the minor part of the problem. The main crux of the matter is the long-lived access keys. 
                         Even though the keys were encrypted as GitHub Actions Secrets and accessed within the workflow code using environment variables, the keys, if leaked, could provide a long-term access method into my AWS account. For this reason, they had to go!
@@ -113,19 +113,19 @@
                         <ul>
                             <li>As above, I didn't need to create/run an Identity Pool. All I needed on the AWS side was to create an IAM Identity Provider, add a few GitHub details provided in the blog, and attach it to a Role. The GitHub details are used to establish a Trust Relationship, embedded within the IAM Role, to the OIDC Provider. Great!</li>
                             <li>Although not overly stressed in the blog, I would need to create a GitHub Organization, something I hadn't needed to date. All my repos were previously stored in a personal account, but use of an Organization is a mandated field within the IAM Identity Provider options.
-                                The Organization had to be created and my repos transferred into it. This proved to be a little painful and took me a couple of hours, because my existing GitHub PAT (Personal Access Token) refused to co-operate with the new Organization, leading me to generate a replacement PAT and associate it with the Organization. This once again allowed me to pull/push code from/to the website & backend repos, which now reside within the Organization.</li>
+                                The Organization had to be created and my repos transferred into it. This proved to be a little painful and took me a couple of hours, because my existing GitHub PAT (Personal Access Token) refused to co-operate with the new Organization, leading me to generate a replacement PAT and associate it with the Organization. This once again allowed me to pull/push code from/to the website & backend repos which now reside within the Organization.</li>
                         </ul>
                     </p>
                     <p>
-                        <i>Fig 1: Shows the Trust Relationship established within the Role and the OIDC provider, for the cloud_resume_challenge_website repo.</i> (Obfuscated items: AWS Account ID, GitHub Organization name).
+                        <i>Fig 1: Shows the Trust Relationship established within the Role and the OIDC Provider, for the cloud_resume_challenge_website repo.</i> (Obfuscated items: AWS Account ID, GitHub Organization name).
                     </p>
                     <img src="../assets/trust_relationship.png" alt="AWS Trust Relationship image" width="75%" height="75%" class="center">
 
                     <h4>&#9995 STOP using Access Keys stored as GitHub Secrets and START using role-to-assume &#128274</h4>
                     
                     <p>
-                        This is probably best explained by showing the old and new GitHub Actions output as a comparison. In the old workflow, the aws-access-key-id and aws-secret-access-key GitHub Secrets are accessed in the step named "Configure AWS Credentials". This uses the workflow 'aws-actions/configure-aws-credentials@v3'.
-                        Although the secret values are not exposed in code or in the workflow output, they were long-lived access keys which existed under a User in my AWS account, meaning they could potentially be leaked.
+                        This is probably best explained by showing the old and new GitHub Actions workflow output as a comparison. In the old workflow, the GitHub Secrets named 'aws-access-key-id' and 'aws-secret-access-key' are accessed in the step named 'Configure AWS Credentials'. This uses the workflow 'aws-actions/configure-aws-credentials@v3'.
+                        Although the secret values are not exposed in code or the workflow output, they were long-lived access keys which existed within a User of my AWS account, meaning they could potentially be leaked.
                     </p>
                     <p>
                         <i>Fig 2: The old GitHub Actions workflow, using an Access Key and Secret Access Key with an IAM User & Inline Policy to authenticate and use AWS services.</i>
@@ -133,27 +133,27 @@
                     <img src="../assets/cloud_resume_challenge_website_old_workflow.png" alt="GitHub Actions old workflow showing Secrets being used" width="100%" height="100%" class="center">
                     
                     <p>
-                        The update to using OIDC tokens is shown below in the new workflow file below. It replaces the GitHub secrets with role-to-assume and role-session-name, using workflow 'aws-actions/configure-aws-credentials@v4' (I bumped to using v4 rather than v3 as part of rewriting the workflow).
+                        The change to using a Role and OIDC Provider is shown in the updated workflow below. It replaces the GitHub secrets with 'role-to-assume' and 'role-session-name', using workflow 'aws-actions/configure-aws-credentials@v4' (as a side note, I bumped to using v4 rather than v3 as part of updating the workflow file).
                     </p>
                     <p>    
                         New workflow key/values:
                         <ul>
-                            <li>role-to-assume: this contains the all-important ARN value of the Role to be assumed. See Fig 1 and note the ARN values matches the ARN of the role for <b>GitHubActions_cloud_resume_challenge_website</b>. This is the role being assumed by the GitHub OIDC.</li>
-                            <li>role-session-name: This is not as important. I queried <a href="//claude.ai/" target="_blank">Claude AI</a> about the significance of it, who advised it should be descriptive and as a best practice reference the github.run_id. Use of the github.run_id, injected as an environment variable, helps to track GitHub Actions workflow runs across associated logfiles.</li>
+                            <li><b>role-to-assume:</b> this contains the all-important ARN value of the Role to be assumed. See Fig 1 and note the ARN values matches the ARN of the role for <b>GitHubActions_cloud_resume_challenge_website</b>. This is the role being assumed by the GitHub OIDC.</li>
+                            <li><b>role-session-name:</b> This is not as important. I queried <a href="//claude.ai/" target="_blank">Claude AI</a> about the significance of it, who advised it should be descriptive and as a best practice reference the github.run_id. Use of the github.run_id, injected as an environment variable, helps to track GitHub Actions workflow runs across associated logfiles.</li>
                         </ul>
                     </p>
                     <p>
-                        <i>Fig 3: The new GitHub Actions workflow, applies a role-to-assume ARN which allows the OIDC assume role to authenticate and use AWS services. Note the ARN matches the ARN in Fig 1 - this is the AWS Role & Trust Relationship being used by the GitHub OIDC.</i> (Obfuscated items: AWS Account ID, assumedRoleId).
+                        <i>Fig 3: The new GitHub Actions workflow, applies a role-to-assume ARN which allows the OIDC assume role to authenticate and use AWS services. Note the ARN matches the ARN in Fig 1 - this is the AWS Role & Trust Relationship being used by the GitHub OIDC Provider.</i> (Obfuscated items: AWS Account ID, assumedRoleId).
                     </p>
                     <img src="../assets/cloud_resume_challenge_website_new_workflow.png" alt="GitHub Actions new workflow showing assumedRoleId being used" width="100%" height="100%" class="center">
 
                     <p>
-                        Since taking the new workflow screenshot, I've added the role-to-assume value as a GitHub Secret, called as an environment variable as <b>role-to-assume: ${{ secrets.AWS_IAM_ROLE }}'</b>. This removes my AWS Account ID from the workflow code and output, further improving account security.
+                        Since taking the new workflow screenshot, I've added the role-to-assume value as a GitHub Secret, called with an environment variable <b>role-to-assume: ${{ secrets.AWS_IAM_ROLE }}'</b>. This removes my AWS Account ID from the workflow code and output, further improving account security.
                     </p>
 
                     <h4>Conclusion &#x1F9EA</h4>
                     <p>
-                        It was an important security improvement to stop using access keys in my GitHub Actions automation pipelines. This has been achieved: the keys are now redundant and have been deleted from my AWS account &#129395
+                        I previously identified an important security improvement to stop using long-lived access keys in my GitHub Actions automation workflows. This has now been realized: the access keys are completely redundant and have been deleted from both my AWS account and from GitHub Secrets. &#129395
                     </p>
 
                 </div>
