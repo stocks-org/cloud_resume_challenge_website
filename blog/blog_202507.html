@@ -83,6 +83,7 @@
         </div>
 
         <div class="row">
+            
             <div class="leftcolumn">
                 <div class="card">
 
@@ -106,7 +107,7 @@
                         I also owe a shout to this useful <a href="https://www.youtube.com/watch?v=Hc_jrDpLMg8" target="_blank">four-part video by Siba N.</a> which explains much the same use case.
                     </p>
 
-                    <h4>Getting Going &#127939</h4>
+                    <h4>Getting Started &#127939</h4>
                     <p>    
                         I quickly realised two things:
                         <ul>
@@ -124,7 +125,7 @@
                     
                     <p>
                         This is probably best explained by showing the old and new GitHub Actions output as a comparison. In the old workflow, the aws-access-key-id and aws-secret-access-key GitHub Secrets are accessed in the step named "Configure AWS Credentials". This uses the workflow 'aws-actions/configure-aws-credentials@v3'.
-                        Although the secret values are not exposed in code or in the workflow output, they were long-lived access keys which existed under a User in my AWS account, meaning they could potentially be leaked. It was an important security posture improvement to cease using these keys. The keys have since been deleted from my AWS account.
+                        Although the secret values are not exposed in code or in the workflow output, they were long-lived access keys which existed under a User in my AWS account, meaning they could potentially be leaked.
                     </p>
                     <p>
                         <i>Fig 2: Shows the GitHub Actions workflow as it used to be, using the Access Key and Secret Access Key to authenticate and use AWS services.</i>
@@ -146,34 +147,17 @@
                     </p>
                     <img src="../assets/cloud_resume_challenge_website_new_workflow.png" alt="GitHub Actions new workflow showing assumedRoleId being used" width="100%" height="100%" class="center">
 
-                </div>
+                    <h4>Conclusion &#x1F9EA</h4>
                     <p>
-                        <object
-                            data="../assets/website_architecture.pdf"
-                            type="application/pdf"
-                            width="100%"
-                            height="1000"
-                            style="border: none"
-                            title="Website Architecture PDF"
-                        >
-                            <iframe
-                                src="../assets/website_architecture.pdf"
-                                width="100%"
-                                height="100%"
-                                style="border: none"
-                                title="Fallback PDF Viewer"
-                            >
-                                <p>
-                                    Your browser does not support PDFs.
-                                    [<a href="../assets/website_architecture.pdf" target="_blank">Download the PDF</a>]
-                                </p>
-                            </iframe>
-                        </object>
+                        It was an important security posture improvement to cease using access keys in my GitHub Actions automation pipelines. This has been achieved: the keys are now redundant and have been deleted from my AWS account &#129395
                     </p>
+
+                </div>
             </div>
+
             <div class="rightcolumn">
                 <div class="card">
-                    <h3>Previous Blogs</h3>
+                    <h3>Other Blogs</h3>
                     <p>
                         <a href="/blog/blog_202505.html">May 2025</a>
                     </p>

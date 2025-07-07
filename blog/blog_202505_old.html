@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html>
+    
+    <head>
+        <title>Stocksy's AWS Cloud Resume Challenge Blog</title>
+
+        <style>
+            .myDiv {
+                border: 5px outset red;
+                text-align: center;
+                font-family: Verdana, Geneva, Tahoma, sans-serif;
+            }
+            body {
+                background-color: white;
+            }
+            h1 {
+                color: black;
+                text-align: center;
+            }
+            h3 {
+                color: black;
+                text-align: left;
+                font-family: Verdana, Geneva, Tahoma, sans-serif;
+            }
+            h4 {
+                color: black;
+                text-align: center;
+                font-family: Verdana, Geneva, Tahoma, sans-serif;
+            }
+            p {
+                font-family: Verdana, Geneva, Tahoma, sans-serif;
+                font-size: 20px;
+            }
+            ol {
+                font-family: Verdana, Geneva, Tahoma, sans-serif;
+                font-size: 16px;
+            }
+            ul {
+                font-family: Verdana, Geneva, Tahoma, sans-serif;
+                font-size: 16px;
+            }
+        </style>
+
+    </head>
+    
+    <body>
+
+        <h1>
+            Stocksy's AWS Cloud Resume Challenge Blog
+        </h1>
+
+        <h3>
+            Requirements
+        </h3>
+
+        <p>
+            Given the requirements in <a href="https://cloudresumechallenge.dev/docs/the-challenge/aws/" target="_blank">The Cloud Resume Challenge - AWS</a>, the stockscloud website was built with several architecture principles in mind based on my interpretation of the design spec while considering the six pillars of the <a href="https://aws.amazon.com/architecture/well-architected/?wa-lens-whitepapers.sort-by=item.additionalFields.sortDate&wa-lens-whitepapers.sort-order=desc&wa-guidance-whitepapers.sort-by=item.additionalFields.sortDate&wa-guidance-whitepapers.sort-order=desc" target="_blank">AWS Well-Architected Framework</a>.
+            I used the MOSCOW method (MUST, SHOULD, COULD, WONT) as described below. Although all requirements might be judged initially to be MUST, where appropriate I used tooling which allows for some improvements versus the original design spec.
+
+            <ol type="1">
+                <li>MUST implement Security best practices: I've used principle of least privilege for all IAM users and policies. Data is encrypted in transit (HTTPS with TLSv1.3) and data is encrypted at rest (table objects using DynamoDB-owned KMS key, bucket objects using SSE-S3). I've added a bucket policy which only allows a CloudFront Distribution endpoint to access the S3 origin using Origin Access Control.</li>
+                <li>MUST utilise Cost Optimization and Performance Efficiency: A Serverless architecture with on-demand (pay-per-use) DynamoDB table, API Gateway fronting a Lambda function which updates the site hit counter instead of long-running EC2 instances or a Container platform for compute. Lambda is always free up to 1 million invocations per month :)</li>
+                <li>MUST apply Operational Excellence: Using DevOps automation and event-driven architectures, the website's backend and frontend is deployed through GitHub Actions upon git push to the Main repo branch. Monitoring for failed GitHub pipelines and CloudWatch monitoring are both available out-of-the-box, further improving operational responsiveness.</li>
+                <li>MUST perform Reliably: By leveraging AWS-managed services, the site is highly available within a single region, easily achieving enough reliability for my static website use case.</li>
+                <li>MUST consider Sustainability: Employing a Serverless architecture ensures that workloads only run for as long as necessary. Using CDK templates and CloudFormation stacks means that infrastructure is declarative and can be quickly disposed of when no longer required.</li>
+                <li>SHOULD use CI/CD, HTML, CSS and a JavaScript website hit counter for the frontend and store code in source control: I hand-crafted much of the HTML but found that I couldn't write a JavaScript hitcounter function! Here, I leant on <a href=https://claude.ai/" target="_blank">Claude AI</a> to assist me with writing the JavaScript function to interface with a REST API Gateway endpoint. The API invokes a Python 3.9 Lambda function to increment the page hit count. The hit count is persisted in a DynamoDB table. CSS is used to style the HTML body elements of each page.</li>
+                <li>SHOULD use an API, Python (including Tests), a Database and CI/CD for the backend: I utilised GitHub Actions, enabling the backend components to be created as a single CloudFormation stack using <i>cdk deploy</i> within the GitHub Actions workflow. The CDK template was written in TypeScript; coding was again ably assisted by Claude AI who wrote much of the template.</li>
+                <li>COULD use SAM (Serverless Application Model) templates to define the backend infrastructure and store code in source control: Here I deviated from the design spec by opting to use CDK (Cloud Development Kit), a well-supported AWS framework for defining infrastructure-as-code in a number of popular languages. I opted for TypeScript due to its support by AWS and usage within my own business environments, allowing me to upskill in CDK. I covered the CI/CD requirements by implementing GitHub Actions workflows for both the frontend (website) and backend (infrastructure) repos and set the workflows to run upon a git push to the Main branch.</li>
+                <li>COULD write a blog post about my experience. I did!</li>
+            </ol>
+
+        </p>
+
+        <h3>
+            Architecture
+        </h3>
+
+        <p>     
+            <object
+                data="../assets/website_architecture.pdf"
+                type="application/pdf"
+                width="100%"
+                height="1000"
+                title="Website Architecture PDF"
+            >
+                <iframe
+                    src="../assets/website_architecture.pdf"
+                    width="100%"
+                    height="100%"
+                    style="border: none"
+                    title="Fallback PDF Viewer"
+                >
+                    <p>
+                        Your browser does not support PDFs.
+                        [<a href="../assets/website_architecture.pdf" target="_blank">Download the PDF</a>]
+                    </p>
+                </iframe>
+            </object>
+        </p>
+
+        <h3>
+            Future Improvements
+        </h3>
+
+        <p>
+            While good security practices have been followed, the implementation of this website includes some IAM issues which can be addressed. Encrypted secrets used by GitHub Actions are placed into environment variables and work in concert with least-privileged AWS users/policies to perform tasks such as updating the CloudFormation stack, PUT requests to S3 and CloudFront cache invalidation. These use long-lived credentials (access keys), which although encrypted, do not apply security best practices and for this reason most companies have moved away from using them.
+            AWS highly recommend implementing IAM Roles to issue STS (Security Token Service) calls such as <i>sts:AssumeRole</i> and <i>sts:AssumeRoleWithWebIdentity</i>. This provides temporary access credentials by issuing an Access Key, a Secret Access Key and a Security Token. The time-limited nature of security tokens makes them by definition more secure than using long-lived credentials. I aim to create Roles and integrate them with GitHib Actions as the main future enhancement.
+        </p>
+        
+        <h3>
+            Final Thoughts
+        </h3>
+
+        <p>
+            You might be thinking "It's a static website, you could have just hosted it in S3!" Yes I <i>could</i>, however there is justification for taking my approach:
+
+            <ul>
+                <li>Principally, I would have failed to meet the design spec of the Cloud Resume Challenge; reason enough to steer away from the S3 web hosting solution.</li>
+                <li>The site is HTTPS because it has a Route 53 hosted zone including an ACM (AWS Certificate Manager) certificate issued by the Amazon CA. This is more secure than a plain HTTP site hosted from an S3 bucket (or indeed anywhere which does not offer HTTPS).</li>
+                <li>The inclusion of a CloudFront Distribution provides the advantage of a CDN (edge and regional edge caches) which serve the site pages and assets. This makes site content available to a global userbase with decreased latency & jitter, regardless of which geography the user is located. Direct S3 bucket access cannot offer this. As mentioned in the Requirements section, <b>only</b> the Distribution can access the S3 origin, strengthening the security posture of the site. Due to the globally-distributed CloudFront CDN edge locations, some mitigation benefits against DDoS attacks may also be realised. When running production workloads, WAF and Shield Advanced should also be implemented for improved web and DDoS protection.</li>
+                <li>Finally, in the S3 bucket properties, AWS recommend using <a href="https://aws.amazon.com/amplify/faqs/?trk=bde46bbc-b618-48e1-b86a-1dd4c35b930f&sc_channel=ps&ef_id=EAIaIQobChMIyuLR26TLjQMV15VQBh3RlxEGEAAYASABEgJ19vD_BwE:G:s&s_kwcid=AL!4422!3!647301968149!e!!g!!aws%20amplify!19621293721!146139123512&gad_campaignid=19621293721&gbraid=0AAAAADjHtp-McekRy0of67TMEVkfAd3-w&gclid=EAIaIQobChMIyuLR26TLjQMV15VQBh3RlxEGEAAYASABEgJ19vD_BwE" target="_blank">Amplify</a> for static web hosting instead of using S3.</li>
+            </ul>
+        </p>
+
+        <p>
+            Thank you for reading!
+        </p>
+
+        <p>
+            <a href="../">Home</a>
+        </p>
+
+        <!-- Hit counter, written by Claude AI -->
+        <div id="hitCounter">Hit Counter: Loading...</div>
+        
+        <script>
+            document.addEventListener('DOMContentLoaded', () => {
+                try {
+                    const counter = document.getElementById('hitCounter');
+                    if (!counter) return; // Exit if element not found
+                    
+                    // Get the page path to use as a unique identifier
+                    const pagePath = window.location.pathname;
+
+                    // API_ENDPOINT env var will be replaced during build time
+                    const apiEndpoint = '%%API_ENDPOINT%%/incrementCounter';
+
+                    // Call the API Gateway endpoint to increment the counter
+                    fetch(apiEndpoint, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({ pagePath: pagePath })
+                    })
+                    .then(response => {
+                        if (!response.ok) {
+                            throw new Error('Network response was not ok');
+                        }
+                        return response.json();
+                    })
+                    .then(data => {
+                        // Update the counter with the value from the DB
+                        counter.textContent = 'Hit Counter: ' + data.count;
+                    })
+                    .catch(error => {
+                        console.error('Error updating hit counter:', error);
+                        counter.textContent = 'Hit Counter: Error';
+                    });
+                } catch (error) {
+                    console.log('Hit counter error:', error);
+                }
+            });
+        </script>
+
+    </body>
+
+</html>
