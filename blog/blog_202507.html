@@ -79,13 +79,15 @@
 
         <div class="header">
         <h2>Stocksy's Cloud Blog</h2>
+        <h3>July 2025</h3>
         </div>
 
         <div class="row">
             <div class="leftcolumn">
                 <div class="card">
+
                     <h2>Site now uses IAM Roles & OIDC to run GitHub Actions &#128640</h2>
-                    <h3>July 2025</h3>
+
                     <p>
                         In the previous blog (Future Improvements section), I recognised that a security issue existed within my website implementation. Long-lived credentials, in the form of access keys and secret access keys were attached to IAM users. 
                         These creds were used to handle calls to STS (AWS Security Token Service). STS generated and passed short-lived access tokens to GitHub Actions, which in turn were used by GitHub Actions workflows to use AWS services every time the workflow was triggered.
@@ -95,12 +97,14 @@
                         Even though the keys were encrypted as GitHub Actions Secrets and accessed within the workflow code using environment variables, the keys, if leaked, could provide a long-term access method into my AWS account. For this reason, they had to go!
                         Here, I will dive into the details of the conversion to using Roles with OIDC (OpenID Connect) and some GitHub-related growing pains.
                     </p>
+
                     <h4>Research &#128214</h4>
                     <p>
                         As a starting assumption, I thought I'd need to setup an IdP (Identity Provider) using a service such as <a href="https://docs.aws.amazon.com/cognito/latest/developerguide/cognito-identity.html" target="_blank">Cognito Identity Pools</a>. 
                         This is untrue: Although it performs a service to generate temporary AWS credentials, Cognito Identity Pools is aimed more at issuing human users with temporary access credentials, where the call <i>sts:AssumeRoleWithWebIdentity</i> is used in concert with a WebID Provider such as a social network login.
                         I did some digging into what I'd need to authenticate GitHub Actions with AWS and came across this <a href="https://aws.amazon.com/blogs/security/use-iam-roles-to-connect-github-actions-to-actions-in-aws/" target="_blank">AWS Security Blog by David Rowe</a>, which got me started. I also owe a shout to this useful <a href="https://www.youtube.com/watch?v=Hc_jrDpLMg8" target="_blank">four-part video by Siba N.</a> which explains much the same use case.
                     </p>
+
                     <h4>Getting Going &#127939</h4>
                     <p>    
                         I quickly realised two things:
@@ -111,10 +115,16 @@
                         </ul>
                     </p>
 
+                    <h4> &#127939</h4>
                     <p>
-                        <i>The below image shows the Trust Relationship established within one of the two Roles. This role is for the cloud_resume_challenge_wevbsite repo (Obfuscated items are AWS Account ID, GitHub Organization name).</i>
+
+                    </p>
+
+                    <p>
+                        <i>The below image shows the Trust Relationship established within the Role and the OIDC provider, for the cloud_resume_challenge_website repo.</i>> (Obfuscated items are AWS Account ID, GitHub Organization name).
                     </p>
                     <img src="../assets/trust_relationship.png" alt="AWS Trust Relationship image" width="75%" height="75%" class="center">
+
                 </div>
                     <p>
                         <object

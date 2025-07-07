@@ -1,11 +1,11 @@
 name: Deploy to S3 and Invalidate CloudFront (old backup copy)
 
 on:
-#   push:
-#     branches: [ main ]
-#   pull_request:
-#     branches: [ main ]  # Tests run on PRs but no deployment
-#   workflow_dispatch:  # Allows manual triggering
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]  # Tests run on PRs but no deployment
+  workflow_dispatch:  # Allows manual triggering
 
 jobs:
   deploy:
