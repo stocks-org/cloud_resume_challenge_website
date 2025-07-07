@@ -115,9 +115,9 @@
                     <p>
                         <i>Fig 1: Architecture Diagram</i>
 
-                        <p>The diagram shows the CDK Infrastructure repo (GitHub name: cloud_resume_challenge_python_backend) and the Website repo (GitHub name: cloud_resume_challenge_website) interacting with AWS using GitHub Actions workflows (one workflow per repo) and an AWS IAM User containing an attached Inline Policy.</p>
-                        <p>Clients (Users) are shown accessing the website via Route 53 (DNS) and CloudFront (Content Delivery Network).</p>
-                        <p>The GitHub Actions workflows are triggered via a 'git push' to the main branch of each repo. They can also be triggered manually from the GitHub Actions UI (useful for troubleshooting failed workflows).</p>
+                        <p>The diagram shows the CDK Infrastructure repo (GitHub name: cloud_resume_challenge_python_backend) and the Website repo (GitHub name: cloud_resume_challenge_website) interacting with AWS using GitHub Actions workflows (one workflow per repo) and an AWS IAM User containing an Inline Policy.</p>
+                        <p>Clients (Users) access the website via Route 53 (DNS) and CloudFront (Content Delivery Network).</p>
+                        <p>The GitHub Actions workflows are triggered via 'git push' to the main branch of each repo. They can also be triggered manually from the GitHub Actions UI, useful for troubleshooting failed workflows.</p>
                     </p>
 
                     <p>
@@ -146,14 +146,13 @@
 
                     <h4>Future Improvements &#x1F4C8</h4>
                     <p>
-                        While good security practices have been followed, the implementation of this website includes some IAM issues which can be addressed. Encrypted secrets used by GitHub Actions are placed into environment variables and work in concert with least-privileged AWS users/policies to perform tasks such as updating the CloudFormation stack, file PUT requests to S3, or CloudFront cache invalidations. These use long-lived access keys, which although encrypted is not advisable due to the potential for a credentials leak. Most companies recommend moving away from using these access methods.
-                        AWS highly recommend implementing IAM Roles to issue STS (Security Token Service) calls such as <i>sts:AssumeRoleWithWebIdentity</i>, which provides temporary AWS access credentials by issuing the requestor with a short-lived Security Token. The time-limited nature of security tokens makes them by definition more secure than using long-lived credentials. I aim to create Roles and integrate them with my GitHub Actions as the main future website enhancement.
+                        While good security practices have generally been followed, the implementation of the StocksCloud website includes some IAM issues which can be addressed. Encrypted secrets used by GitHub Actions are placed into environment variables and work in concert with least-privileged AWS users/policies to perform tasks such as updating the CloudFormation stack, file PUT requests to S3, or CloudFront cache invalidations. These use long-lived access keys, which although encrypted is not advisable due to the potential for a credentials leak. Most companies recommend moving away from using these access methods.
+                        AWS recommend implementing IAM Roles to issue STS (Security Token Service) calls such as <i>sts:AssumeRoleWithWebIdentity</i>, which provides temporary AWS access credentials by issuing the requestor with short-lived security tokens. The timebound nature of security tokens makes them by definition more secure than using long-lived credentials. I aim to create IAM Roles and integrate them with my GitHub Actions as the main future website enhancement.
                     </p>
 
                     <h4>Final Thoughts &#x1F914</h4>
                     <p>
                         You might be thinking "It's a static website, you could have hosted it in S3!" Yes I <i>could</i>, however there is justification for taking my approach:
-
                         <ul>
                             <li>Principally, I would have failed to meet the design spec of the Cloud Resume Challenge; reason enough to steer away from the S3 web hosting solution.</li>
                             <li>The site is HTTPS because it has a Route 53 hosted zone including an ACM (AWS Certificate Manager) certificate issued by the Amazon CA. This is more secure than a plain HTTP site hosted from an S3 bucket (or indeed anywhere which does not offer HTTPS).</li>
