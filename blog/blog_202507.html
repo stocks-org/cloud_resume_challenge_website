@@ -95,14 +95,15 @@
                         What was not security best-practice was attaching the IAM policies to IAM users as inline policies, when using Roles is AWS recommended practice.
                         Not using Roles was however, only the minor part of the problem. The main crux of the matter is the long-lived access keys. 
                         Even though the keys were encrypted as GitHub Actions Secrets and accessed within the workflow code using environment variables, the keys, if leaked, could provide a long-term access method into my AWS account. For this reason, they had to go!
-                        Here, I will dive into the details of the conversion to using Roles with OIDC (OpenID Connect) and some GitHub-related growing pains.
+                        Here, I will dive into the details of the conversion to using AWS Roles with OIDC (OpenID Connect) and some GitHub-related growing pains.
                     </p>
 
                     <h4>Research &#128214</h4>
                     <p>
                         As a starting assumption, I thought I'd need to setup an IdP (Identity Provider) using a service such as <a href="https://docs.aws.amazon.com/cognito/latest/developerguide/cognito-identity.html" target="_blank">Cognito Identity Pools</a>. 
                         This is untrue: Although it performs a service to generate temporary AWS credentials, Cognito Identity Pools is aimed more at issuing human users with temporary access credentials, where the call <i>sts:AssumeRoleWithWebIdentity</i> is used in concert with a WebID Provider such as a social network login.
-                        I did some digging into what I'd need to authenticate GitHub Actions with AWS and came across this <a href="https://aws.amazon.com/blogs/security/use-iam-roles-to-connect-github-actions-to-actions-in-aws/" target="_blank">AWS Security Blog by David Rowe</a>, which got me started. I also owe a shout to this useful <a href="https://www.youtube.com/watch?v=Hc_jrDpLMg8" target="_blank">four-part video by Siba N.</a> which explains much the same use case.
+                        I did some digging into what I'd need to authenticate GitHub Actions with AWS and came across this <a href="https://aws.amazon.com/blogs/security/use-iam-roles-to-connect-github-actions-to-actions-in-aws/" target="_blank">AWS Security Blog by David Rowe</a>, which got me started. A further <a href="https://docs.github.com/en/actions/how-tos/security-for-github-actions/security-hardening-your-deployments/configuring-openid-connect-in-amazon-web-services" target="_blank">GitHub Doc</a> explains the OIDC concept from GitHub's perspective. 
+                        I also owe a shout to this useful <a href="https://www.youtube.com/watch?v=Hc_jrDpLMg8" target="_blank">four-part video by Siba N.</a> which explains much the same use case.
                     </p>
 
                     <h4>Getting Going &#127939</h4>
@@ -114,16 +115,33 @@
                                 The Organization had to be created and my repos transferred into it. This proved to be a little painful and took me a couple of hours, because my existing GitHub PAT (Personal Access Token) refused to co-operate with the new Organization, leading me to generate a replacement PAT and associate it with the Organization. This once again allowed me to pull/push code from/to the webiste & backend repos, now located within the Organization.</li>
                         </ul>
                     </p>
+                    <p>
+                        <i>Fig 1: Shows the Trust Relationship established within the Role and the OIDC provider, for the cloud_resume_challenge_website repo.</i> (Obfuscated items: AWS Account ID, GitHub Organization name).
+                    </p>
+                    <img src="../assets/trust_relationship.png" alt="AWS Trust Relationship image" width="75%" height="75%" class="center">
 
                     <h4>STOP using Access Keys stored as GitHub Secrets and START using role-to-assume &#128274</h4>
                     <p>
-                        This is probably best explained by showing the old and new GitHub Workflow files as a comparison. In the old workflow file, the ${{ secrets.ACCESS_KEY_ID }} and ${{ secrets.SECRET_ACCESS_KEY }} are used by the 
+                        This is probably best explained by showing the old and new GitHub Workflow files as a comparison. In the old workflow file, the ${{ secrets.ACCESS_KEY_ID }} and ${{ secrets.SECRET_ACCESS_KEY }} are run in the "Configure AWS Credentials" step, which uses the GitHub Actions workflow aws-actions/configure-aws-credentials@v3
+                        Although the actual keys are not exposed in code, they are long-lived access keys which exist against a user in my AWS account, meaning they could potentially be leaked! It was important to cease using the keys.
                     </p>
-
                     <p>
-                        <i>The below image shows the Trust Relationship established within the Role and the OIDC provider, for the cloud_resume_challenge_website repo.</i> (Obfuscated items: AWS Account ID, GitHub Organization name).
+                        <i>Fig 2: Shows the GitHub Actions workflow as it used to be, using the Access Key and Secret Access Key to authenticate and use AWS services.</i>
                     </p>
-                    <img src="../assets/trust_relationship.png" alt="AWS Trust Relationship image" width="75%" height="75%" class="center">
+                    <p>
+                        The update to using OIDC tokens is shown below in the new workflow file. It replaces the GitHub secrets with role-to-assume and role-session-name, again using aws-actions/configure-aws-credentials@v4 (I bumped to the latest version as part of rewriting the workflow).
+                    </p>
+                    <p>    
+                        New workflow key/values:
+                        <ul>
+                            <li>role-to-assume: this contains the all-important ARN value of the Role to be assumed. See Fig 1 and note the ARN matches exactly the ARN of the role for <b>GitHubActions_cloud_resume_challenge_website</b>. This is the role being assumed by the GitHub OIDC.</li>
+                            <li>role-session-name: This is not as important. I queried <a href="//claude.ai/" target="_blank">Claude AI</a> about the significance of the this, who advised it should be descriptive and as best practice reference the GitHub workflow ID, so it uses an environment variable to achieve this. The Workflow ID helps to track the workflow runs across associated logfiles.</li>
+                        </ul>
+                    </p>
+                    <p>
+                        <i>Fig 3: The GitHub Actions workflow as it is now, using role-to-assume ARN which allows the OIDC assume role to authenticate and use AWS services. Note the ARN matches the ARN in Fig 1 - this is the AWS Role & Trust Relationship being used by the GitHub OIDC.</i> (Obfuscated items: AWS Account ID, assumedRoleId).
+                    </p>
+                    <img src="../assets/cloud_resume_challenge_website_old_workflow.png" alt="GitHub Actions old workflow showing Secrets being used" width="75%" height="75%" class="center">
 
                 </div>
                     <p>
