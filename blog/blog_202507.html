@@ -139,7 +139,7 @@
                         New workflow key/values:
                         <ul>
                             <li>role-to-assume: this contains the all-important ARN value of the Role to be assumed. See Fig 1 and note the ARN values matches the ARN of the role for <b>GitHubActions_cloud_resume_challenge_website</b>. This is the role being assumed by the GitHub OIDC.</li>
-                            <li>role-session-name: This is not as important. I queried <a href="//claude.ai/" target="_blank">Claude AI</a> about the significance of it, who advised it should be descriptive and as best practice reference the GitHub workflow ID, so it uses an environment variable to achieve this. The Workflow ID helps to track GitHub Actions workflow runs across associated logfiles.</li>
+                            <li>role-session-name: This is not as important. I queried <a href="//claude.ai/" target="_blank">Claude AI</a> about the significance of it, who advised it should be descriptive and as a best practice reference the github.run_id. Use of the github.run_id, injected as an environment variable, helps to track GitHub Actions workflow runs across associated logfiles.</li>
                         </ul>
                     </p>
                     <p>
