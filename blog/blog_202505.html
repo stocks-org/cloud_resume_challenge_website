@@ -111,6 +111,11 @@
                     </p>
 
                     <h4>Architecture &#x1F3D7</h4>
+
+                    <p>
+                        <i>Fig 1: Architecture diagram, showing the CDK infrastructure repo (GitHub name: cloud_resume_challenge_python_backend) and the Website repo (GitHub name: cloud_resume_challenge_website)</i>
+                    </p>
+
                     <p>
                         <object
                             data="../assets/website_architecture.pdf"
@@ -123,7 +128,7 @@
                             <iframe
                                 src="../assets/website_architecture.pdf"
                                 width="100%"
-                                height="80%"
+                                height="100%"
                                 style="border: none"
                                 title="Fallback PDF Viewer"
                             >
@@ -137,13 +142,13 @@
 
                     <h4>Future Improvements &#x1F4C8</h4>
                     <p>
-                        While good security practices have been followed, the implementation of this website includes some IAM issues which can be addressed. Encrypted secrets used by GitHub Actions are placed into environment variables and work in concert with least-privileged AWS users/policies to perform tasks such as updating the CloudFormation stack, PUT requests to S3 and CloudFront cache invalidation. These use long-lived credentials (access keys), which although encrypted, do not apply security best practices and for this reason most companies have moved away from using them.
-                        AWS highly recommend implementing IAM Roles to issue STS (Security Token Service) calls such as <i>sts:AssumeRole</i> and <i>sts:AssumeRoleWithWebIdentity</i>. This provides temporary access credentials by issuing an Access Key, a Secret Access Key and a Security Token. The time-limited nature of security tokens makes them by definition more secure than using long-lived credentials. I aim to create Roles and integrate them with GitHib Actions as the main future enhancement.
+                        While good security practices have been followed, the implementation of this website includes some IAM issues which can be addressed. Encrypted secrets used by GitHub Actions are placed into environment variables and work in concert with least-privileged AWS users/policies to perform tasks such as updating the CloudFormation stack, file PUT requests to S3, or perform CloudFront cache invalidation. These use long-lived credentials (access keys), although encrypted, do not apply security best practices and for this reason most companies have moved away from using them.
+                        AWS highly recommend implementing IAM Roles to issue STS (Security Token Service) calls such as <i>sts:AssumeRoleWithWebIdentity</i>, which provides temporary AWS access credentials by issuing the requestor with a short-lived Security Token. The time-limited nature of security tokens makes them by definition more secure than using long-lived credentials. I aim to create Roles and integrate them with GitHib Actions as the main future website enhancement.
                     </p>
 
                     <h4>Final Thoughts &#x1F914</h4>
                     <p>
-                        You might be thinking "It's a static website, you could have just hosted it in S3!" Yes I <i>could</i>, however there is justification for taking my approach:
+                        You might be thinking "It's a static website, you could have hosted it in S3!" Yes I <i>could</i>, however there is justification for taking my approach:
 
                         <ul>
                             <li>Principally, I would have failed to meet the design spec of the Cloud Resume Challenge; reason enough to steer away from the S3 web hosting solution.</li>
